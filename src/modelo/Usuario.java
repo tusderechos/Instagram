@@ -31,7 +31,7 @@ public class Usuario extends RegistroBase {
         FotoPerfil = "";
     }
 
-    public Usuario(String NombreCompleto, String Genero, String Usuario, String Contrasena, String FechaRegistro, int Edad, TipoCuenta tipoCuenta, EstadoCuenta estadoCuenta, String FotoPerfil) {
+    public Usuario(String NombreCompleto, String Genero, String Usuario, String Contrasena, String FechaRegistro, int Edad, TipoCuenta tipoCuenta, String FotoPerfil) {
         this.NombreCompleto = NombreCompleto;
         this.Genero = Genero;
         this.Usuario = Usuario;

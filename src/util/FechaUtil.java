@@ -11,6 +11,7 @@ package util;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 
 public final class FechaUtil {
     
@@ -19,5 +20,9 @@ public final class FechaUtil {
     
     public static String hoy() {
         return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+    
+    public static String ahora() {
+        return LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 }

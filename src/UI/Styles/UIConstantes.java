@@ -24,9 +24,14 @@ public class UIConstantes {
     public static final Font SUBTITULO_FONT = new Font("SansSerif", Font.BOLD, 16);
     public static final Font TEXTO_FONT = new Font("SansSerif", Font.PLAIN, 14);
     public static final Font PEQUENO_FONT = new Font("SansSerif", Font.PLAIN, 12);
+    public static final Font BOTON_FONT = new Font("SansSerif", Font.BOLD, 14);
+    public static final Font LOGO_FONT = new Font("Serif", Font.BOLD | Font.ITALIC, 34);
     
     public static final Dimension SIDEBAR_SIZE = new Dimension(250, 768);
     public static final Dimension FEED_CARD_SIZE = new Dimension(470, 650);
+    
+    public static final int ARCO_CARD = 24;
+    public static final int ARCO_INPUT = 18;
     
     private UIConstantes() {
         

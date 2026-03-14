@@ -8,6 +8,16 @@ package App;
  *
  * @author USUARIO
  */
+
+import UI.Frame.MainFrame;
+
+import javax.swing.SwingUtilities;
+
 public class Main {
-    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MainFrame main = new MainFrame();
+            main.setVisible(true);
+        });
+    }
 }

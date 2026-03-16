@@ -152,7 +152,7 @@ public class BuscarPanel extends JPanel {
         }
         
         for (Publicacion publicacion : publicaciones) {
-            PostCard card = new PostCard(publicacion, username -> appNavigator.irAPerfil(username));
+            PostCard card = new PostCard(publicacion, username -> appNavigator.irAPerfil(username), sessionManager.getUsuarioActual());
             card.setAlignmentX(Component.CENTER_ALIGNMENT);
             ResultadosPanel.add(card);
             ResultadosPanel.add(Box.createVerticalStrut(18));

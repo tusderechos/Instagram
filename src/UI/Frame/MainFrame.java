@@ -10,6 +10,7 @@ package UI.Frame;
  */
 
 import Data.Paths.Paths;
+import Red.ServidorChatLauncher;
 import UI.Core.SessionManager;
 import interfaces.NavigationListener;
 import UI.Paneles.AppPanel;
@@ -20,6 +21,8 @@ import UI.Styles.UIConstantes;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainFrame extends JFrame implements NavigationListener {
     
@@ -44,7 +47,7 @@ public class MainFrame extends JFrame implements NavigationListener {
         appPanel = new AppPanel(sessionManager, this);
         
         setTitle("Insta - Red Social");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(UIConstantes.DESKTOP_WIDTH, UIConstantes.DESKTOP_HEIGHT);
         setMinimumSize(new Dimension(1180, 700));
         setLocationRelativeTo(null);
@@ -56,11 +59,29 @@ public class MainFrame extends JFrame implements NavigationListener {
         ContenedorMain.add(appPanel, "APP");
         
         setContentPane(ContenedorMain);
+        ConfigurarCierreVentana();
         irALogin();
+    }
+    
+    private void ConfigurarCierreVentana() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                CerrarAplicacion();
+            }
+        });
+    }
+    
+    private void CerrarAplicacion() {
+        sessionManager.CerrarSesion();
+        ServidorChatLauncher.DetenerServidor();
+        dispose();
+        System.exit(0);
     }
     
     @Override
     public void irALogin() {
+        loginPanel.MostrarMensajePendiente();
         cardLayout.show(ContenedorMain, "LOGIN");
     }
     

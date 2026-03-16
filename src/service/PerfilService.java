@@ -56,7 +56,7 @@ public class PerfilService {
             return true;
         }
         
-        return followService.SigueA(owner, owner);
+        return followService.SigueA(viewer, owner);
     }
     
     public boolean PuedeVerPublicaciones(String viewer, String owner) {

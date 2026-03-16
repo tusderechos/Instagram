@@ -56,6 +56,8 @@ public class SidebarMenu extends JPanel {
         top.add(Box.createVerticalStrut(10));
         top.add(CrearBotonMenu("Inbox", () -> appNavigator.irAInbox()));
         top.add(Box.createVerticalStrut(10));
+        top.add(CrearBotonMenu("Solicitudes", () -> appNavigator.irASolicitudes()));
+        top.add(Box.createVerticalStrut(10));
         top.add(CrearBotonMenu("Perfil", () -> appNavigator.irAPerfil(sessionManager.getUsuarioActual())));
         
         JPanel bottom = new JPanel();

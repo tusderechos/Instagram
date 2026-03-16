@@ -28,9 +28,14 @@ public abstract class BaseRAF {
             File file = new File(path);
             raf = new RandomAccessFile(file, "rw");
         } catch (IOException e) {
+            raf = null;
             System.out.println("Error abriendo archivo RAF: " + path);
             e.printStackTrace();
         }
+    }
+    
+    protected boolean EstaDisponible() {
+        return raf != null;
     }
     
     public void Cerrar() {
@@ -46,6 +51,10 @@ public abstract class BaseRAF {
     
     protected long TotalRegistros(int tamanoregistro) {
         try {
+            if (raf == null) {
+                return 0;
+            }
+            
             return raf.length() / tamanoregistro;
         } catch (Exception e) {
             e.printStackTrace();

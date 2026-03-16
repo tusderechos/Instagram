@@ -24,6 +24,7 @@ import UI.Componentes.ConfirmDialog;
 import UI.Core.SessionManager;
 import interfaces.AppNavigator;
 import UI.Styles.InstaColores;
+import interfaces.NavigationListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +45,8 @@ public class PerfilPanel extends JPanel {
     private final SolicitudService solicitudService;
     private final PublicacionService publicacionService;
     
+    private final NavigationListener navigationListener;
+    
     private String UsuarioPerfilAbierto;
     
     private PerfilHeader Header;
@@ -52,9 +55,14 @@ public class PerfilPanel extends JPanel {
     private JScrollPane ScrollPane;
     private JLabel LblEstadoPrivado;
     
-    public PerfilPanel(SessionManager sessionManager, AppNavigator appNavigator) {
+    private JButton BtnMensaje;
+    private JButton BtnDesactivarCuenta;
+    private JPanel PanelAccionesSecundarias;
+    
+    public PerfilPanel(SessionManager sessionManager, AppNavigator appNavigator, NavigationListener navigationListener) {
         this.sessionManager = sessionManager;
         this.appNavigator = appNavigator;
+        this.navigationListener = navigationListener;
         
         usuarioService = new UsuarioService();
         perfilService = new PerfilService();
@@ -68,14 +76,30 @@ public class PerfilPanel extends JPanel {
         messageBar = new MessageBar();
         
         PanelContenido = new JPanel();
-//        PanelContenido.setOpaque(false);
-//        PanelContenido.setLayout(new BoxLayout(contenido, BoxLayout.Y_AXIS));
         PanelContenido.setBackground(InstaColores.FONDO);
         PanelContenido.setLayout(new BoxLayout(PanelContenido, BoxLayout.Y_AXIS));
         PanelContenido.setBorder(BorderFactory.createEmptyBorder(10, 40, 30, 40));
 
         Header = new PerfilHeader(this::ManejarAccionPrincipal);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        PanelAccionesSecundarias = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        PanelAccionesSecundarias.setOpaque(false);
+        PanelAccionesSecundarias.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        BtnMensaje = new JButton("Mensaje");
+        BtnMensaje.setFocusPainted(false);
+        BtnMensaje.setVisible(false);
+        BtnMensaje.addActionListener(e -> AbrirChatConPerfilActual());
+        
+        BtnDesactivarCuenta = new JButton("Desactivar cuenta");
+        BtnDesactivarCuenta.setFocusPainted(false);
+        BtnDesactivarCuenta.setVisible(false);
+        BtnDesactivarCuenta.addActionListener(e -> DesactivarCuentaActual());
+        
+        PanelAccionesSecundarias.add(BtnMensaje);
+        PanelAccionesSecundarias.add(Box.createHorizontalStrut(10));
+        PanelAccionesSecundarias.add(BtnDesactivarCuenta);
         
         JSeparator separador = new JSeparator();
         separador.setForeground(InstaColores.BORDER);
@@ -98,6 +122,8 @@ public class PerfilPanel extends JPanel {
         gridwrapper.add(PanelGrid, BorderLayout.NORTH);
         
         PanelContenido.add(Header);
+        PanelContenido.add(Box.createVerticalStrut(8));
+        PanelContenido.add(PanelAccionesSecundarias);
         PanelContenido.add(Box.createVerticalStrut(10));
         PanelContenido.add(separador);
         PanelContenido.add(Box.createVerticalStrut(20));
@@ -116,9 +142,7 @@ public class PerfilPanel extends JPanel {
         LblEstadoPrivado.setVisible(true);
     }
     
-    public void CargarPerfil(String usuarioperfil) {
-        System.out.println("CargarPerfil ejecutado con: " + usuarioperfil);
-        
+    public void CargarPerfil(String usuarioperfil) {        
         if (usuarioperfil == null || usuarioperfil.isBlank()) {
             MostrarPerfilNoDisponible();
             return;
@@ -141,6 +165,12 @@ public class PerfilPanel extends JPanel {
         
         Header.ActualizarDatos(usuario, estadoperfil, posts, followers, following);
         
+        boolean mostrarbotonmensaje = viewer != null && !viewer.isBlank() && !viewer.equalsIgnoreCase(usuarioperfil) && perfilService.PuedeEnviarMensaje(viewer, usuarioperfil);
+        BtnMensaje.setVisible(mostrarbotonmensaje);
+        
+        boolean esperfilpropio = viewer != null && viewer.equalsIgnoreCase(usuarioperfil);
+        BtnDesactivarCuenta.setVisible(esperfilpropio);
+        
         boolean puedeverposts = perfilService.PuedeVerPublicaciones(viewer, usuarioperfil);
         
         PanelGrid.removeAll();
@@ -149,7 +179,6 @@ public class PerfilPanel extends JPanel {
             LblEstadoPrivado.setText("Esta cuenta es privada. Debes seguirla para ver sus publicaciones");
             LblEstadoPrivado.setVisible(true);
         } else {
-//            LblEstadoPrivado.setVisible(false);
             CargarGridPublicaciones(usuarioperfil);
         }
         
@@ -236,7 +265,7 @@ public class PerfilPanel extends JPanel {
         dialogo.setLayout(new BorderLayout());
         dialogo.getContentPane().setBackground(InstaColores.FONDO);
         
-        PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario));
+        PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario), sessionManager.getUsuarioActual());
         dialogo.add(card, BorderLayout.CENTER);
         
         dialogo.setVisible(true);
@@ -314,6 +343,58 @@ public class PerfilPanel extends JPanel {
                 messageBar.MostrarError("No se pudo dejar de seguir");
             }
             
+            ProgramarOcultarBarra();
+        }
+    }
+    
+    private void AbrirChatConPerfilActual() {
+        String viewer = sessionManager.getUsuarioActual();
+        
+        if (viewer == null || viewer.isBlank()) {
+            return;
+        }
+        
+        if (UsuarioPerfilAbierto == null || UsuarioPerfilAbierto.isBlank()) {
+            return;
+        }
+        
+        if (viewer.equalsIgnoreCase(UsuarioPerfilAbierto)) {
+            messageBar.MostrarInfo("No puede enviarte mensajes a ti mismo");
+            ProgramarOcultarBarra();
+            return;
+        }
+        
+        if (!perfilService.PuedeEnviarMensaje(viewer, UsuarioPerfilAbierto)) {
+            messageBar.MostrarError("No puedes enviar mensajes a este usuario");
+            ProgramarOcultarBarra();
+            return;
+        }
+        
+        appNavigator.irAInboxConUsuario(UsuarioPerfilAbierto);
+    }
+    
+    private void DesactivarCuentaActual() {
+        String usuarioactual = sessionManager.getUsuarioActual();
+        
+        if (usuarioactual == null || usuarioactual.isBlank()) {
+            return;
+        }
+        
+        ConfirmDialog dialogo = new ConfirmDialog((Frame) SwingUtilities.getWindowAncestor(this), "Confirmar", "Quieres desactivar tu cuenta?");
+        dialogo.setVisible(true);
+        
+        if (!dialogo.isConfirmado()) {
+            return;
+        }
+        
+        boolean exito = usuarioService.DesactivarCuenta(usuarioactual);
+        
+        if (exito) {
+            sessionManager.setMensajePendienteLogin("Tu cuenta fue desactivada correctamente");
+            sessionManager.CerrarSesion();
+            
+        } else {
+            messageBar.MostrarError("No se pudo desactivar la cuenta");
             ProgramarOcultarBarra();
         }
     }

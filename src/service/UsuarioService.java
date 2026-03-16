@@ -13,6 +13,7 @@ import Data.Paths.Paths;
 import Data.raf.UsersRAF;
 import modelo.Usuario;
 import enums.TipoCuenta;
+import enums.EstadoCuenta;
 import util.FechaUtil;
 import util.Validaciones;
 
@@ -52,15 +53,92 @@ public class UsuarioService {
     }
     
     public boolean Login(String usuario, String contrasena) {
-        return usersRAF.Login(usuario, contrasena);
+        Usuario user = BuscarUsuario(usuario);
+        
+        if (user == null) {
+            return false;
+        }
+        
+        return user.getContrasena().equals(contrasena) && user.getEstadoCuenta() == EstadoCuenta.ACTIVA && user.isActivo();
     }
     
     public Usuario BuscarUsuario(String usuario) {
-        return usersRAF.Buscar(usuario);
+        Usuario user = usersRAF.Buscar(usuario);
+        
+        if (user == null) {
+            return null;
+        }
+        
+        if (!Paths.UsuarioTieneEstructuraBasica(user.getUsuario())) {
+            return null;
+        }
+        
+        if (!user.isActivo()) {
+            return null;
+        }
+        
+        if (user.getEstadoCuenta() != EstadoCuenta.ACTIVA) {
+            return null;
+        }
+        
+        return user;
     }
     
     public ArrayList<Usuario> ListarUsuarios() {
-        return usersRAF.Listar();
+        ArrayList<Usuario> usuarios = usersRAF.Listar();
+        ArrayList<Usuario> validos = new ArrayList<>();
+        
+        for (Usuario usuario : usuarios) {
+            if (usuario == null) {
+                continue;
+            }
+            
+            if (!usuario.isActivo()) {
+                continue;
+            }
+            
+            if (usuario.getEstadoCuenta() != EstadoCuenta.ACTIVA) {
+                continue;
+            }
+            
+            if (!Paths.UsuarioTieneEstructuraBasica(usuario.getUsuario())) {
+                continue;
+            }
+            
+            validos.add(usuario);
+        }
+        
+        return validos;
+    }
+    
+    public boolean DesactivarCuenta(String usuario) {
+        return usersRAF.CambiarEstadoCuenta(usuario, EstadoCuenta.DESACTIVADA);
+    }
+    
+    public boolean ActivarCuenta(String usuario) {
+        return usersRAF.CambiarEstadoCuenta(usuario, EstadoCuenta.ACTIVA);
+    }
+    
+    public boolean UsuarioExisteFisicamente(String usuario) {
+        return Paths.UsuarioTieneEstructuraBasica(usuario);
+    }
+    
+    public boolean UsuarioEsValido(String usuario) {
+        Usuario user = usersRAF.Buscar(usuario);
+        
+        if (user == null) {
+            return false;
+        }
+        
+        if (!user.isActivo()) {
+            return false;
+        }
+        
+        if (user.getEstadoCuenta() != EstadoCuenta.ACTIVA) {
+            return false;
+        }
+        
+        return Paths.UsuarioTieneEstructuraBasica(usuario);
     }
     
     public UsersRAF getUsersRAF() {

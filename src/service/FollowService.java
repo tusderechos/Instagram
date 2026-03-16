@@ -37,7 +37,7 @@ public class FollowService {
         }
         
         Usuario usuarioseguidor = usuarioService.BuscarUsuario(seguidor);
-        Usuario usuarioseguido = usuarioService.BuscarUsuario(seguidor);
+        Usuario usuarioseguido = usuarioService.BuscarUsuario(seguido);
         
         if (usuarioseguidor == null || usuarioseguido == null) {
             return false;
@@ -58,7 +58,7 @@ public class FollowService {
             return false;
         }
         
-        boolean agregadofollowing = followersRAF.Agregar(seguido);
+        boolean agregadofollowing = followingRAF.Agregar(seguido);
         boolean agregadofollowers = followersRAF.Agregar(seguidor);
         
         return agregadofollowing && agregadofollowers;
@@ -72,6 +72,10 @@ public class FollowService {
             return false;
         }
         
+        if (!usuarioreceptor.isActivo() || !usuarioemisor.isActivo()) {
+            return false;
+        }
+        
         RequestsRAF requestsRAF = new RequestsRAF(receptor);
         Solicitud solicitud = requestsRAF.Buscar(emisor, receptor);
         
@@ -79,18 +83,23 @@ public class FollowService {
             return false;
         }
         
-        FollowingRAF followingRAF = new FollowingRAF(receptor);
-        FollowersRAF followersRAF = new FollowersRAF(emisor);
+        FollowingRAF followingRAF = new FollowingRAF(emisor);
+        FollowersRAF followersRAF = new FollowersRAF(receptor);
         
         if (followingRAF.ExisteRelacion(receptor) || followersRAF.ExisteRelacion(emisor)) {
             return false;
         }
         
         boolean solicitudaceptada = requestsRAF.CambiarEstado(emisor, receptor, EstadoSolicitud.ACEPTADA);
+        
+        if (!solicitudaceptada) {
+            return false;
+        }
+        
         boolean agregadofollowing = followingRAF.Agregar(receptor);
         boolean agregadofollowers = followersRAF.Agregar(emisor);
         
-        return solicitudaceptada && agregadofollowing && agregadofollowers;
+        return agregadofollowing && agregadofollowers;
     }
     
     public boolean DejarDeSeguir(String seguidor, String seguido) {

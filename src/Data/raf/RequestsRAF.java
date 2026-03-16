@@ -50,7 +50,7 @@ public class RequestsRAF extends BaseRAF {
             while (raf.getFilePointer() < raf.length()) {
                 Solicitud solicitud = LeerSolicitud();
                 
-                if (solicitud.getEmisor().equalsIgnoreCase(emisor) && solicitud.getReceptor().equalsIgnoreCase(receptor) && solicitud.isActivo()) {
+                if (solicitud.getEmisor().equalsIgnoreCase(emisor) && solicitud.getReceptor().equalsIgnoreCase(receptor) && solicitud.isActivo() && solicitud.getEstado() == EstadoSolicitud.PENDIENTE) {
                     return solicitud;
                 }
             }
@@ -70,7 +70,7 @@ public class RequestsRAF extends BaseRAF {
                 long posicion = raf.getFilePointer();
                 Solicitud solicitud = LeerSolicitud();
                 
-                if (solicitud.getEmisor().equalsIgnoreCase(emisor) && solicitud.getReceptor().equalsIgnoreCase(receptor) && solicitud.isActivo()) {
+                if (solicitud.getEmisor().equalsIgnoreCase(emisor) && solicitud.getReceptor().equalsIgnoreCase(receptor) && solicitud.isActivo() && solicitud.getEstado() == EstadoSolicitud.PENDIENTE) {
                     return posicion;
                 }
             }
@@ -149,7 +149,7 @@ public class RequestsRAF extends BaseRAF {
         
         solicitud.setEstado(nuevoestado);
         
-        if (nuevoestado == EstadoSolicitud.CANCELADA) {
+        if (nuevoestado != EstadoSolicitud.PENDIENTE) {
             solicitud.setActivo(false);
         }
         
@@ -157,9 +157,26 @@ public class RequestsRAF extends BaseRAF {
     }
     
     public boolean ExisteSolicitudPendiente(String emisor, String receptor) {
-        Solicitud solicitud = Buscar(emisor, receptor);
+//        Solicitud solicitud = Buscar(emisor, receptor);
+//        
+//        return solicitud != null && solicitud.getEstado() == EstadoSolicitud.PENDIENTE && solicitud.isActivo();
         
-        return solicitud != null && solicitud.getEstado() == EstadoSolicitud.PENDIENTE && solicitud.isActivo();
+        try {
+            raf.seek(0);
+            
+            while (raf.getFilePointer() < raf.length()) {
+                Solicitud solicitud = LeerSolicitud();
+                
+                if (solicitud.getEmisor().equalsIgnoreCase(emisor) && solicitud.getReceptor().equalsIgnoreCase(receptor) && solicitud.getEstado() == EstadoSolicitud.PENDIENTE && solicitud.isActivo()) {
+                    return true;
+                }
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
     }
     
     private void EscribirSolicitud(Solicitud solicitud) throws IOException {

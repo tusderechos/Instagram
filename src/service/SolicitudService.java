@@ -21,9 +21,11 @@ import java.util.ArrayList;
 public class SolicitudService {
     
     private final UsuarioService usuarioService;
+    private final FollowService followService;
     
     public SolicitudService() {
         usuarioService = new UsuarioService();
+        followService = new FollowService();
     }
     
     public boolean EnviarSolicitud(String emisor, String receptor) {
@@ -56,6 +58,12 @@ public class SolicitudService {
             return false;
         }
         
+        FollowService followservice = new FollowService();
+        
+        if (followservice.SigueA(emisor, receptor)) {
+            return false;
+        }
+        
         Solicitud solicitud = new Solicitud(emisor, receptor, FechaUtil.hoy(), FechaUtil.ahora());
         
         return requestsRAF.Agregar(solicitud);
@@ -74,15 +82,7 @@ public class SolicitudService {
     }
     
     public boolean AceptarSolicitud(String receptor, String emisor) {
-        Usuario usuarioreceptor = usuarioService.BuscarUsuario(receptor);
-        Usuario usuarioemisor = usuarioService.BuscarUsuario(emisor);
-        
-        if (usuarioreceptor == null || usuarioemisor == null) {
-            return false;
-        }
-        
-        RequestsRAF requestsRAF = new RequestsRAF(receptor);
-        return requestsRAF.CambiarEstado(emisor, receptor, EstadoSolicitud.ACEPTADA);
+        return followService.AceptarSolicitudYSeguir(receptor, emisor);
     }
     
     public boolean RechazarSolicitud(String receptor, String emisor) {

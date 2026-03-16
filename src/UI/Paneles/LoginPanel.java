@@ -9,6 +9,7 @@ package UI.Paneles;
  * @author USUARIO
  */
 
+import Red.ManejoConexionChat;
 import service.UsuarioService;
 import UI.Componentes.BotonRedondeado;
 import UI.Componentes.PanelRedondeado;
@@ -30,6 +31,9 @@ public class LoginPanel extends JPanel {
     private JTextField TxtUsuario;
     private JPasswordField TxtContrasena;
     private JLabel LblEstado;
+    
+    private static final String HOST_CHAT = "localhost";
+    private static final int PUERTO_CHAT = 5050;
     
     public LoginPanel(SessionManager sessionManager, NavigationListener navigationListener) {
         usuarioService = new UsuarioService();
@@ -134,14 +138,44 @@ public class LoginPanel extends JPanel {
             return;
         }
         
+        ManejoConexionChat manejochat = new ManejoConexionChat(usuario);
+        boolean conectadochat = manejochat.Conectar(HOST_CHAT, PUERTO_CHAT);
+        
         sessionManager.setUsuarioActual(usuario);
+        
+        if (conectadochat) {
+            sessionManager.setManejoConexionChat(manejochat);
+        } else {
+            sessionManager.setManejoConexionChat(null);
+        }
+        
         LimpiarCampos();
         LimpiarEstado();
+        
+        if (!conectadochat) {
+            MostrarAviso("Sesion iniciada. Chat no disponible");
+        }
+        
         navigationListener.irAApp();
     }   
     
+    public void MostrarMensajePendiente() {
+        String mensaje = sessionManager.ConsumirMensajePendienteLogin();
+        
+        if (mensaje != null && !mensaje.isBlank()) {
+            MostrarError(mensaje);
+        } else {
+            LimpiarEstado();
+        }
+    }
+    
     private void MostrarError(String mensaje) {
         LblEstado.setForeground(InstaColores.ERROR);
+        LblEstado.setText(mensaje);
+    }
+    
+    private void MostrarAviso(String mensaje) {
+        LblEstado.setForeground(InstaColores.AZUL);
         LblEstado.setText(mensaje);
     }
     

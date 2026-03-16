@@ -106,4 +106,26 @@ public final class Paths {
             e.printStackTrace();
         }
     }
+    
+    public static boolean ExisteCarpetaUsuario(String usuario) {
+        if (usuario == null || usuario.isBlank()) {
+            return false;
+        }
+        
+        File folder = new File(getFolderUsuario(usuario));
+        return folder.exists() && folder.isDirectory();
+    }
+    
+    public static boolean ExisteArchivoUsuario(String ruta) {
+        if (ruta == null || ruta.isBlank()) {
+            return false;
+        }
+        
+        File archivo = new File(ruta);
+        return archivo.exists() && archivo.isFile();
+    }
+    
+    public static boolean UsuarioTieneEstructuraBasica(String usuario) {
+        return ExisteCarpetaUsuario(usuario) && ExisteArchivoUsuario(getFilePosts(usuario)) && ExisteArchivoUsuario(getFileSeguidores(usuario)) && ExisteArchivoUsuario(getFileSeguidos(usuario)) && ExisteArchivoUsuario(getFileRequests(usuario)) && ExisteArchivoUsuario(getFileInbox(usuario)) && ExisteArchivoUsuario(getFileStickers(usuario));
+    }
 }

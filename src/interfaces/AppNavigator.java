@@ -13,5 +13,7 @@ public interface AppNavigator {
     void irAPerfil(String usuarioperfil);
     void irABuscar();
     void irAInbox();
+    void irAInboxConUsuario(String usuario);
     void irACrearPost();
+    void irASolicitudes();
 }

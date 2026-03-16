@@ -33,6 +33,10 @@ public class PostsRAF extends BaseRAF {
     
     public boolean Agregar(Publicacion post) {
         try {
+            if (!EstaDisponible()) {
+                return false;
+            }
+            
             raf.seek(raf.length());
             EscribirPost(post);
             return true;
@@ -45,6 +49,10 @@ public class PostsRAF extends BaseRAF {
     
     public Publicacion BuscarPorID(long ID) {
         try {
+            if (!EstaDisponible()) {
+                return null;
+            }
+            
             raf.seek(0);
             
             while (raf.getFilePointer() < raf.length()) {
@@ -64,6 +72,10 @@ public class PostsRAF extends BaseRAF {
     
     public long BuscarPosicionPorID(long ID) {
         try {
+            if (!EstaDisponible()) {
+                return -1;
+            }
+            
             raf.seek(0);
             
             while (raf.getFilePointer() < raf.length()) {
@@ -86,6 +98,10 @@ public class PostsRAF extends BaseRAF {
         ArrayList<Publicacion> publicaciones = new ArrayList<>();
         
         try {
+            if (!EstaDisponible()) {
+                return publicaciones;
+            }
+            
             raf.seek(0);
             
             while (raf.getFilePointer() < raf.length()) {
@@ -109,6 +125,10 @@ public class PostsRAF extends BaseRAF {
     
     public boolean Eliminar(long ID) {
         try {
+            if (!EstaDisponible()) {
+                return false;
+            }
+            
             long posicion = BuscarPosicionPorID(ID);
             
             if (posicion == -1) {

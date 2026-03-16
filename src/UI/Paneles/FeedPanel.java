@@ -70,7 +70,7 @@ public class FeedPanel extends JPanel {
             ContenedorPosts.add(vacio);
         } else {
             for (Publicacion post : posts) {
-                PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario));
+                PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario), sessionManager.getUsuarioActual());
                 card.setAlignmentX(Component.CENTER_ALIGNMENT);
                 
                 ContenedorPosts.add(card);

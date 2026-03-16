@@ -39,7 +39,7 @@ public class InboxService {
         if (emisor == null || receptor == null || contenido == null) {
             return false;
         }
-        
+
         if (emisor.equalsIgnoreCase(receptor)) {
             return false;
         }
@@ -59,11 +59,15 @@ public class InboxService {
             return false;
         }
         
-        if (contenido.length() > 300) {
+        if (tipomensaje == TipoMensaje.TEXTO && contenido.length() > 300) {
             return false;
         }
         
         Mensaje mensaje = new Mensaje(emisor, receptor, FechaUtil.hoy(), FechaUtil.ahora(), contenido, tipomensaje);
+        
+        System.out.println("tipo mensaje: " + tipomensaje);
+        System.out.println("contenido recibido: " + contenido);
+        System.out.println("longitud contenido: " + contenido.length());
         
         InboxRAF inboxreceptor = new InboxRAF(receptor);
         InboxRAF inboxemisor = new InboxRAF(emisor);
@@ -115,6 +119,96 @@ public class InboxService {
         }
         
         return conversaciones;
+    }
+    
+    public ArrayList<String> ListarConversacionesOrdenadas(String owner) {
+        ArrayList<String> conversaciones = ListarConversaciones(owner);
+        OrdenarConversacionesPorUltimoMensaje(owner, conversaciones, conversaciones.size());
+        return conversaciones;
+    }
+    
+    public Mensaje ObtenerUltimoMensajeDe(String owner, String otrousuario) {
+        ArrayList<Mensaje> conversacion = ObtenerConversacion(owner, otrousuario);
+        
+        if (conversacion.isEmpty()) {
+            return null;
+        }
+        
+        return conversacion.get(conversacion.size() - 1);
+    }
+    
+    public String ObtenerPrevoewUltimoMensaje(String owner, String otrousuario) {
+        Mensaje ultimo = ObtenerUltimoMensajeDe(owner, otrousuario);
+        
+        if (ultimo == null) {
+            return "";
+        }
+        
+        String preview;
+        
+        if (ultimo.getTipoMensaje() == TipoMensaje.STICKER) {
+            preview = "Sticker";
+        } else {
+            preview = ultimo.getContenido();
+        }
+        
+        if (preview == null) {
+            return "";
+        }
+        
+        preview = preview.trim();
+        
+        if (preview.length() > 22) {
+            preview = preview.substring(0, 22) + "...";
+        }
+        
+        return preview;
+    }
+    
+    public String ObtenerHoraUltimoMensajeDe(String owner, String otrousuario) {
+        Mensaje ultimo = ObtenerUltimoMensajeDe(owner, otrousuario);
+        
+        if (ultimo == null || ultimo.getHora() == null || ultimo.getHora().isBlank()) {
+            return "";
+        }
+        
+        if (ultimo.getHora().length() >= 5) {
+            return ultimo.getHora().substring(0, 5);
+        }
+        
+        return ultimo.getHora();
+    }
+    
+    private void OrdenarConversacionesPorUltimoMensaje(String owner, ArrayList<String> conversaciones, int numero) {
+        if (numero <= 1) {
+            return;
+        }
+        
+        for (int i = 0; i < numero - 1; i++) {
+            String tiempoactual = ObtenerMarcaTiempoUltimoMensaje(owner, conversaciones.get(i));
+            String tiemposiguiente = ObtenerMarcaTiempoUltimoMensaje(owner, conversaciones.get(i + 1));
+            
+            if (tiempoactual.compareTo(tiemposiguiente) < 0) {
+                String aux = conversaciones.get(i);
+                conversaciones.set(i, conversaciones.get(i + 1));
+                conversaciones.set(i + 1, aux);
+            }
+        }
+        
+        OrdenarConversacionesPorUltimoMensaje(owner, conversaciones, numero - 1);
+    }
+    
+    private String ObtenerMarcaTiempoUltimoMensaje(String owner, String otrousuario) {
+        Mensaje ultimo = ObtenerUltimoMensajeDe(owner, otrousuario);
+        
+        if (ultimo == null) {
+            return "";
+        }
+        
+        String fecha = ultimo.getFecha() != null ? ultimo.getFecha() : "";
+        String hora = ultimo.getHora() != null ? ultimo.getHora() : "";
+        
+        return fecha + hora;
     }
     
     public boolean MarcarConversacionesComoLeida(String owner, String otrousuario) {

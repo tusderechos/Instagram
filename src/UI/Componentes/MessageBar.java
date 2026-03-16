@@ -17,39 +17,55 @@ import java.awt.*;
 
 public class MessageBar extends JPanel{
     
-    private JLabel LblMensaje;
+    private final JLabel LblIcono;
+    private final JLabel LblMensaje;
     
     public MessageBar() {
         setLayout(new BorderLayout());
         setVisible(false);
         setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
         
+        LblIcono = new JLabel("i");
+        LblIcono.setFont(new Font("SansSerif", Font.BOLD, 15));
+        LblIcono.setForeground(Color.WHITE);
+        LblIcono.setHorizontalAlignment(SwingConstants.CENTER);
+        LblIcono.setPreferredSize(new Dimension(20, 20));
+        
         LblMensaje = new JLabel("");
         LblMensaje.setFont(UIConstantes.TEXTO_FONT);
         LblMensaje.setForeground(Color.WHITE);
         
+        add(LblIcono, BorderLayout.WEST);
         add(LblMensaje, BorderLayout.CENTER);
     }
     
     public void MostrarInfo(String mensaje) {
-        setBackground(InstaColores.AZUL);
-        LblMensaje.setText(mensaje);
-        setVisible(true);
+        AplicarEstado(InstaColores.AZUL_OSCURO, "i", mensaje);
     }
     
     public void MostrarError(String mensaje) {
-        setBackground(InstaColores.ERROR);
-        LblMensaje.setText(mensaje);
-        setVisible(true);
+        AplicarEstado(InstaColores.ERROR, "!", mensaje);
     }
     
     public void MostrarSuccess(String mensaje) {
-        setBackground(InstaColores.SUCCESS);
-        LblMensaje.setText(mensaje);
+        AplicarEstado(InstaColores.SUCCESS, "✔", mensaje);
+    }
+    
+    public void MostrarWarning(String mensaje) {
+        AplicarEstado(InstaColores.WARNING, "!", mensaje);
+    }
+    
+    private void AplicarEstado(Color fondo, String icono, String mensaje) {
+        setBackground(fondo);
+        LblIcono.setText(icono);
+        LblMensaje.setText(mensaje != null ? mensaje : "");
         setVisible(true);
+        revalidate();
+        repaint();
     }
     
     public void Ocultar() {
         setVisible(false);
+        LblMensaje.setText("");
     }
 }

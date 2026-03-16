@@ -13,6 +13,8 @@ import Red.ManejoConexionChat;
 import Red.PaqueteMensaje;
 import UI.Componentes.MensajeBurbuja;
 import UI.Componentes.StickerPickerPanel;
+import UI.Componentes.BotonRedondeado;
+import UI.Componentes.PanelRedondeado;
 import UI.Core.SessionManager;
 import UI.Styles.InstaColores;
 import UI.Styles.UIConstantes;
@@ -51,20 +53,21 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         setBackground(InstaColores.FONDO);
         
         JPanel panelizquierdo = new JPanel(new BorderLayout());
-        panelizquierdo.setPreferredSize(new Dimension(280, 0));
-        panelizquierdo.setBackground(Color.WHITE);
-        panelizquierdo.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, InstaColores.BORDER));
+        panelizquierdo.setPreferredSize(new Dimension(295, 0));
+        panelizquierdo.setBackground(InstaColores.CARD);
+        panelizquierdo.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, InstaColores.DIVISOR));
         
         JLabel lbltitulo = new JLabel("Inbox");
         lbltitulo.setFont(UIConstantes.SUBTITULO_FONT);
         lbltitulo.setForeground(InstaColores.TEXTO_PRIMARIO);
-        lbltitulo.setBorder(new EmptyBorder(20, 20, 20, 20));
+        lbltitulo.setBorder(new EmptyBorder(20, 20, 16, 20));
         
         ModeloConversaciones = new DefaultListModel<>();
+        
         ListaConversaciones = new JList<>(ModeloConversaciones);
         ListaConversaciones.setFont(UIConstantes.TEXTO_FONT);
         ListaConversaciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        ListaConversaciones.setBackground(Color.WHITE);
+        ListaConversaciones.setBackground(InstaColores.CARD);
         ListaConversaciones.setForeground(InstaColores.TEXTO_PRIMARIO);
         ListaConversaciones.setBorder(new EmptyBorder(10, 10, 10, 10));
         ListaConversaciones.addListSelectionListener(e -> {
@@ -81,6 +84,7 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         
         JScrollPane scrollconversaciones = new JScrollPane(ListaConversaciones);
         scrollconversaciones.setBorder(null);
+        scrollconversaciones.getViewport().setBackground(InstaColores.CARD);
         
         panelizquierdo.add(lbltitulo, BorderLayout.NORTH);
         panelizquierdo.add(scrollconversaciones, BorderLayout.CENTER);
@@ -89,41 +93,52 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         JPanel panelderecho = new JPanel(new BorderLayout());
         panelderecho.setBackground(InstaColores.FONDO);
         
+        JPanel headchat = new JPanel(new BorderLayout());
+        headchat.setBackground(InstaColores.CARD);
+        headchat.setBorder(new EmptyBorder(18, 22, 18, 22));
+        
         LblTituloChat = new JLabel("Selecciona una conversacion");
         LblTituloChat.setFont(UIConstantes.SUBTITULO_FONT);
         LblTituloChat.setForeground(InstaColores.TEXTO_PRIMARIO);
-        LblTituloChat.setBorder(new EmptyBorder(20, 20, 20, 20));
+        
+        headchat.add(LblTituloChat, BorderLayout.WEST);
         
         PanelMensajes = new JPanel();
         PanelMensajes.setLayout(new BoxLayout(PanelMensajes, BoxLayout.Y_AXIS));
         PanelMensajes.setBackground(InstaColores.FONDO);
-        PanelMensajes.setBorder(new EmptyBorder(10, 10, 10, 10));
+        PanelMensajes.setBorder(new EmptyBorder(14, 14, 14, 14));
         
         ScrollMensajes = new JScrollPane(PanelMensajes);
-        ScrollMensajes.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        ScrollMensajes.setBorder(null);
+        ScrollMensajes.getViewport().setBackground(InstaColores.FONDO);
         ScrollMensajes.getVerticalScrollBar().setUnitIncrement(14);
                 
         JPanel panelinferior = new JPanel();
         panelinferior.setLayout(new BoxLayout(panelinferior, BoxLayout.Y_AXIS));
         panelinferior.setOpaque(false);
-        panelinferior.setBorder(new EmptyBorder(10, 20, 20, 20));
+        panelinferior.setBorder(new EmptyBorder(12, 18, 18, 18));
         
-        JPanel filainput = new JPanel(new BorderLayout(10, 0));
-        filainput.setOpaque(false);
+        PanelRedondeado filainput = new PanelRedondeado(UIConstantes.ARCO_CARD);
+        filainput.setLayout(new BorderLayout(10, 0));
+        filainput.setBackground(InstaColores.CARD);
+        filainput.setMostrarSombra(false);
+        filainput.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         JButton btnsticker = new JButton("🙂");
         btnsticker.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
         btnsticker.setFocusPainted(false);
+        btnsticker.setBorderPainted(false);
+        btnsticker.setContentAreaFilled(false);
+        btnsticker.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnsticker.addActionListener(e -> AbrirSelectorStickers());
         
         TxtMensaje = new JTextField();
         TxtMensaje.setFont(UIConstantes.TEXTO_FONT);
-        TxtMensaje.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
+        TxtMensaje.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER_SUAVE), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
         TxtMensaje.addActionListener(e -> EnviarMensajeActual());
         
-        JButton btnenviar = new JButton("Enviar");
-        btnenviar.setFont(UIConstantes.TEXTO_FONT);
-        btnenviar.setFocusPainted(false);
+        BotonRedondeado btnenviar = new BotonRedondeado("Enviar");
+        btnenviar.setPreferredSize(new Dimension(100, UIConstantes.ALTURA_BOTON));
         btnenviar.addActionListener(e -> EnviarMensajeActual());
         
         filainput.add(btnsticker, BorderLayout.WEST);
@@ -133,12 +148,12 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         LblEstado = new JLabel(" ");
         LblEstado.setFont(UIConstantes.PEQUENO_FONT);
         LblEstado.setForeground(InstaColores.TEXTO_SECUNDARIO);
-        LblEstado.setBorder(new EmptyBorder(8, 2, 0, 2));
+        LblEstado.setBorder(new EmptyBorder(8, 4, 0, 4));
         
         panelinferior.add(filainput);
         panelinferior.add(LblEstado);
         
-        panelderecho.add(LblTituloChat, BorderLayout.NORTH);
+        panelderecho.add(headchat, BorderLayout.NORTH);
         panelderecho.add(ScrollMensajes, BorderLayout.CENTER);
         panelderecho.add(panelinferior, BorderLayout.SOUTH);
         
@@ -224,11 +239,20 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         ArrayList<Mensaje> mensajes = chat.ObtenerConversacion(otrousuario);
         
         if (mensajes.isEmpty()) {
+            PanelRedondeado vacio = new PanelRedondeado(UIConstantes.ARCO_CARD);
+            vacio.setLayout(new BoxLayout(vacio, BoxLayout.Y_AXIS));
+            vacio.setBackground(InstaColores.CARD);
+            vacio.setBorder(BorderFactory.createEmptyBorder(26, 28, 26, 28));
+            vacio.setMaximumSize(new Dimension(340, 120));
+            vacio.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
             JLabel lblvacio = new JLabel("No hay mensajes todavia");
             lblvacio.setFont(UIConstantes.TEXTO_FONT);
             lblvacio.setForeground(InstaColores.TEXTO_SECUNDARIO);
-            lblvacio.setBorder(new EmptyBorder(20, 10, 20, 10));
             lblvacio.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            vacio.add(lblvacio);
+            PanelMensajes.add(Box.createVerticalStrut(20));
             PanelMensajes.add(lblvacio);
         } else {
             for (Mensaje mensaje : mensajes) {                
@@ -255,9 +279,7 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
             MostrarEstado("Escribe un mensaje");
             return;
         }
-        
-        System.out.println("Intentando enviar a: " + UsuarioChatActual + " contenido: " + contenido);
-        
+                
         ManejoConexionChat chat = ObtenerChat();
         
         if (chat == null) {
@@ -266,9 +288,7 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         }
         
         boolean enviado = chat.EnviarTexto(UsuarioChatActual, contenido);
-        
-        System.out.println("Resultado enviar: " + enviado);
-        
+                
         if (!enviado) {
             MostrarEstado("No se pudo enviar el mensaje");
             return;
@@ -330,6 +350,7 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         
         JDialog dialogo = new JDialog(SwingUtilities.getWindowAncestor(this), "Stickers", Dialog.ModalityType.APPLICATION_MODAL);
         dialogo.setLayout(new BorderLayout());
+        dialogo.getContentPane().setBackground(InstaColores.FONDO);
         
         StickerPickerPanel picker = new StickerPickerPanel(
                 sessionManager.getUsuarioActual(),
@@ -358,7 +379,7 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         );
         
         dialogo.add(picker, BorderLayout.CENTER);
-        dialogo.setSize(360, 450);
+        dialogo.setSize(380, 470);
         dialogo.setLocationRelativeTo(this);
         dialogo.setVisible(true);
     }
@@ -367,13 +388,22 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         LblTituloChat.setText("Selecciona una conversacion");
         PanelMensajes.removeAll();
         
+        PanelRedondeado cardinfo = new PanelRedondeado(UIConstantes.ARCO_CARD);
+        cardinfo.setLayout(new BoxLayout(cardinfo, BoxLayout.Y_AXIS));
+        cardinfo.setBackground(InstaColores.CARD);
+        cardinfo.setBorder(BorderFactory.createEmptyBorder(28, 30, 28, 30));
+        cardinfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
         JLabel lblinfo = new JLabel("Selecciona una conversacion para comenzar");
         lblinfo.setFont(UIConstantes.TEXTO_FONT);
         lblinfo.setForeground(InstaColores.TEXTO_SECUNDARIO);
-        lblinfo.setBorder(new EmptyBorder(20, 10, 20, 20));
         lblinfo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        PanelMensajes.add(lblinfo);
+        cardinfo.add(lblinfo);
+        
+        PanelMensajes.add(Box.createVerticalStrut(22));
+        PanelMensajes.add(cardinfo);
+        
         RefrescarPanelMensajes();
     }
     

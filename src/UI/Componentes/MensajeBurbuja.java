@@ -25,13 +25,13 @@ public class MensajeBurbuja extends JPanel {
     public MensajeBurbuja(Mensaje mensaje, boolean esmio) {
         setLayout(new FlowLayout(esmio ? FlowLayout.RIGHT : FlowLayout.LEFT, 0, 0));
         setOpaque(false);
-        setBorder(new EmptyBorder(4, 8, 4, 8));
+        setBorder(new EmptyBorder(5, 8, 5, 8));
         
-        JPanel burbuja = new JPanel();
+        PanelRedondeado burbuja = new PanelRedondeado(22);
         burbuja.setLayout(new BoxLayout(burbuja, BoxLayout.Y_AXIS));
-        burbuja.setOpaque(true);
-        burbuja.setBackground(esmio ? new Color(220, 248, 198) : Color.WHITE);
-        burbuja.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), new EmptyBorder(10, 12, 8, 12)));
+        burbuja.setOpaque(false);
+        burbuja.setBackground(esmio ? InstaColores.AZUL_CLARO : InstaColores.CARD);
+        burbuja.setBorder(BorderFactory.createEmptyBorder(10, 14, 8, 14));
         
         if (mensaje.getTipoMensaje() == TipoMensaje.STICKER) {
             JLabel lblsticker = CrearContenidoSticker(mensaje);
@@ -43,10 +43,12 @@ public class MensajeBurbuja extends JPanel {
             txtcontenido.setLineWrap(true);
             txtcontenido.setWrapStyleWord(true);
             txtcontenido.setOpaque(false);
+            txtcontenido.setDisabledTextColor(InstaColores.TEXTO_PRIMARIO);
             txtcontenido.setBorder(null);
             txtcontenido.setFont(UIConstantes.TEXTO_FONT);
             txtcontenido.setForeground(InstaColores.TEXTO_PRIMARIO);
             txtcontenido.setMaximumSize(new Dimension(320, Integer.MAX_VALUE));
+            txtcontenido.setAlignmentX(Component.LEFT_ALIGNMENT);
             burbuja.add(txtcontenido);
         }
         
@@ -61,7 +63,7 @@ public class MensajeBurbuja extends JPanel {
         JLabel lblhora = new JLabel(mensaje.getFecha() + " " + hora);
         lblhora.setFont(UIConstantes.PEQUENO_FONT);
         lblhora.setForeground(InstaColores.TEXTO_SECUNDARIO);
-        lblhora.setAlignmentX(esmio ? Component.RIGHT_ALIGNMENT : Component.LEFT_ALIGNMENT);
+        lblhora.setAlignmentX(Component.LEFT_ALIGNMENT);
         burbuja.add(lblhora);
         
         add(burbuja);

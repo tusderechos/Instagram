@@ -35,17 +35,19 @@ public class PerfilHeader extends JPanel {
     public PerfilHeader(PerfilHeaderListener Listener) {
         this.Listener = Listener;
         
-        setLayout(new BorderLayout(20, 0));
+        setLayout(new BorderLayout(26, 0));
         setOpaque(false);
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBorder(BorderFactory.createEmptyBorder(22, 22, 22, 22));
         
-        Image placeholder = PlaceHolder.CrearPlaceHolderCircular(110, 110, "U");
+        Image placeholder = PlaceHolder.CrearPlaceHolderCircular(UIConstantes.AVATAR_GRANDE, UIConstantes.AVATAR_GRANDE, "U");
         LblFoto = new LabelImagenCircular(placeholder);
-        LblFoto.setPreferredSize(new Dimension(110, 110));
+        LblFoto.setPreferredSize(new Dimension(UIConstantes.AVATAR_GRANDE, UIConstantes.AVATAR_GRANDE));
+        LblFoto.setMinimumSize(new Dimension(UIConstantes.AVATAR_GRANDE, UIConstantes.AVATAR_GRANDE));
+        LblFoto.setMaximumSize(new Dimension(UIConstantes.AVATAR_GRANDE, UIConstantes.AVATAR_GRANDE));
         
         JPanel izquierda = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         izquierda.setOpaque(false);
-        izquierda.setPreferredSize(new Dimension(180, 130));
+        izquierda.setPreferredSize(new Dimension(190, 140));
         izquierda.add(LblFoto);
         
         JPanel derecha = new JPanel();
@@ -54,14 +56,15 @@ public class PerfilHeader extends JPanel {
         
         JPanel filatop = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         filatop.setOpaque(false);
+        filatop.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         LblUsuario = new JLabel("@usuario");
         LblUsuario.setFont(new Font("SansSerif", Font.PLAIN, 24));
         LblUsuario.setForeground(InstaColores.TEXTO_PRIMARIO);
         
         BtnAccion = new BotonRedondeado("Seguir");
-        BtnAccion.setPreferredSize(new Dimension(170, 38));
-        BtnAccion.setMaximumSize(new Dimension(170, 38));
+        BtnAccion.setPreferredSize(new Dimension(175, UIConstantes.ALTURA_BOTON_PEQUENO));
+        BtnAccion.setMaximumSize(new Dimension(175, UIConstantes.ALTURA_BOTON_PEQUENO));
         BtnAccion.addActionListener(e -> {
             if (Listener != null) {
                 Listener.onAccionPrincipal();
@@ -71,8 +74,9 @@ public class PerfilHeader extends JPanel {
         filatop.add(LblUsuario);
         filatop.add(BtnAccion);
         
-        JPanel filastats = new JPanel(new FlowLayout(FlowLayout.LEFT, 26, 0));
+        JPanel filastats = new JPanel(new FlowLayout(FlowLayout.LEFT, 28, 0));
         filastats.setOpaque(false);
+        filastats.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         LblPosts = CrearLabelStat("0 publicaciones");
         LblFollowers = CrearLabelStat("0 followers");
@@ -83,17 +87,19 @@ public class PerfilHeader extends JPanel {
         filastats.add(LblFollowing);
         
         LblNombre = new JLabel("Nombre completo");
-        LblNombre.setFont(new Font("SansSerif", Font.BOLD, 14));
+        LblNombre.setFont(new Font("SansSerif", Font.BOLD, 15));
         LblNombre.setForeground(InstaColores.TEXTO_PRIMARIO);
+        LblNombre.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         LblPrivacidad = new JLabel("Cuenta publica");
         LblPrivacidad.setFont(UIConstantes.PEQUENO_FONT);
         LblPrivacidad.setForeground(InstaColores.TEXTO_SECUNDARIO);
+        LblPrivacidad.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         derecha.add(filatop);
-        derecha.add(Box.createVerticalStrut(16));
+        derecha.add(Box.createVerticalStrut(18));
         derecha.add(filastats);
-        derecha.add(Box.createVerticalStrut(14));
+        derecha.add(Box.createVerticalStrut(16));
         derecha.add(LblNombre);
         derecha.add(Box.createVerticalStrut(6));
         derecha.add(LblPrivacidad);
@@ -128,16 +134,13 @@ public class PerfilHeader extends JPanel {
         if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isBlank()) {
             ImageIcon icono = new ImageIcon(usuario.getFotoPerfil());
             
-            System.out.println("Ancho icono: " + icono.getIconWidth());
-            System.out.println("Alto icono: " + icono.getIconHeight());
-            
             if (icono.getIconWidth() > 0) {
                 LblFoto.setImage(icono.getImage());
             } else {
-                LblFoto.setImage(PlaceHolder.CrearPlaceHolderCircular(110, 110, inicial));
+                LblFoto.setImage(PlaceHolder.CrearPlaceHolderCircular(UIConstantes.AVATAR_GRANDE, UIConstantes.AVATAR_GRANDE, inicial));
             }
         } else {
-            LblFoto.setImage(PlaceHolder.CrearPlaceHolderCircular(110, 110, inicial));
+            LblFoto.setImage(PlaceHolder.CrearPlaceHolderCircular(UIConstantes.AVATAR_GRANDE, UIConstantes.AVATAR_GRANDE, inicial));
         }
         
         switch (estadoperfil) {

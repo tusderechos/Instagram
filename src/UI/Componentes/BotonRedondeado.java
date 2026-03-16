@@ -34,17 +34,28 @@ public class BotonRedondeado extends JButton {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
+        Color fondo;
+        
         if (!isEnabled()) {
-            g2d.setColor(new Color(170, 170, 170));
+            fondo = new Color(185, 185, 190);
         } else if (getModel().isPressed()) {
-            g2d.setColor(InstaColores.AZUL.darker());
+            fondo = InstaColores.AZUL_OSCURO;
+        } else if (getModel().isRollover()) {
+            fondo = InstaColores.AZUL.darker();
         } else {
-            g2d.setColor(InstaColores.AZUL);
+            fondo = InstaColores.AZUL;
         }
         
-        g2d.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 18, 18));
+        g2d.setColor(fondo);
+        g2d.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), UIConstantes.ARCO_BOTON, UIConstantes.ARCO_BOTON));
         
-        super.paintComponent(g2d);
+        if (isEnabled()) {
+            g2d.setColor(new Color(255, 255, 255, 35));
+            g2d.draw(new RoundRectangle2D.Double(0.5, 0.5, getWidth() - 1, getHeight() - 1, UIConstantes.ARCO_BOTON, UIConstantes.ARCO_BOTON));
+        }
+        
+        g2d.dispose();
+        super.paintComponent(g);
     }
     
     @Override

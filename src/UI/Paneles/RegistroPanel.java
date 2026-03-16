@@ -43,37 +43,51 @@ public class RegistroPanel extends JPanel {
         setLayout(new GridBagLayout());
         setBackground(InstaColores.FONDO);
         
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(18, 18, 18, 18);
+        
         PanelRedondeado card = new PanelRedondeado(UIConstantes.ARCO_CARD);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setPreferredSize(new Dimension(430, 620));
-        card.setBorder(new EmptyBorder(28, 28, 28, 28));
+        card.setPreferredSize(new Dimension(560, 720));
+        card.setBackground(InstaColores.CARD);
+        card.setBorder(new EmptyBorder(30, 34, 28, 34));
         
         JLabel lbltitulo = new JLabel("Crear Cuenta");
-        lbltitulo.setFont(UIConstantes.TEXTO_FONT);
+        lbltitulo.setFont(UIConstantes.LOGO_FONT);
         lbltitulo.setForeground(InstaColores.TEXTO_PRIMARIO);
         lbltitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
+        JLabel lblsubtitulo = new JLabel("Completa tus datos para registrarte");
+        lblsubtitulo.setFont(UIConstantes.TEXTO_FONT);
+        lblsubtitulo.setForeground(InstaColores.TEXTO_SECUNDARIO);
+        lblsubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
         TxtNombre = CrearCampoTexto();
-        CBGenero = new JComboBox<>(new String[]{"M", "F"});
+        CBGenero = CrearComboBox(new String[]{"M", "F"});
         TxtUsuario = CrearCampoTexto();
         TxtPassword = CrearCampoContrasena();
-        SPEdad = new JSpinner(new SpinnerNumberModel(18, 1, 120, 1));
-        CBTipoCuenta = new JComboBox<>(new String[]{"PUBLICA", "PRIVADA"});
+        SPEdad = CrearSpinnerEdad();
+        CBTipoCuenta = CrearComboBox(new String[]{"PUBLICA", "PRIVADA"});
         TxtFotoPerfil = CrearCampoTexto();
         
         JPanel panelfoto = new JPanel(new BorderLayout(8, 0));
         panelfoto.setOpaque(false);
+        panelfoto.setMaximumSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
+        panelfoto.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         BotonRedondeado btnexaminar = new BotonRedondeado("Examinar");
-        btnexaminar.setPreferredSize(new Dimension(120, 40));
+        btnexaminar.setPreferredSize(new Dimension(120, UIConstantes.ALTURA_BOTON));
+        btnexaminar.setMaximumSize(new Dimension(120, UIConstantes.ALTURA_BOTON));
         btnexaminar.addActionListener(e -> SeleccionarFoto());
         
         panelfoto.add(TxtFotoPerfil, BorderLayout.CENTER);
         panelfoto.add(btnexaminar, BorderLayout.EAST);
         
         BotonRedondeado btncrear = new BotonRedondeado("Registrarme");
-        btncrear.setPreferredSize(new Dimension(300, 42));
-        btncrear.setMaximumSize(new Dimension(300, 42));
+        btncrear.setPreferredSize(new Dimension(300, UIConstantes.ALTURA_BOTON));
+        btncrear.setMaximumSize(new Dimension(300, UIConstantes.ALTURA_BOTON));
         btncrear.setAlignmentX(Component.CENTER_ALIGNMENT);
         btncrear.addActionListener(e -> RegistrarUsuario());
         
@@ -90,9 +104,15 @@ public class RegistroPanel extends JPanel {
         LblEstado = new JLabel(" ");
         LblEstado.setFont(UIConstantes.PEQUENO_FONT);
         LblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
+        LblEstado.setHorizontalAlignment(SwingConstants.CENTER);
+        LblEstado.setMaximumSize(new Dimension(340, 20));
         
+        card.add(Box.createVerticalStrut(2));
         card.add(lbltitulo);
-        card.add(Box.createVerticalStrut(22));
+        card.add(Box.createVerticalStrut(6));
+        card.add(lblsubtitulo);
+        card.add(Box.createVerticalStrut(20));
+        
         card.add(CrearLabeledField("Nombre completo", TxtNombre));
         card.add(Box.createVerticalStrut(10));
         card.add(CrearLabeledField("Genero", CBGenero));
@@ -109,54 +129,79 @@ public class RegistroPanel extends JPanel {
         card.add(Box.createVerticalStrut(18));
         card.add(btncrear);
         card.add(Box.createVerticalStrut(12));
-        card.add(LblEstado);
-        card.add(Box.createVerticalGlue());
         card.add(btnvolver);
+        card.add(Box.createVerticalStrut(5));
+        card.add(LblEstado);
         
-        add(card);
+        add(card, gbc);
     }
     
     private JTextField CrearCampoTexto() {
         JTextField field = new JTextField();
-        field.setPreferredSize(new Dimension(300, 40));
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        field.setPreferredSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
+        field.setMaximumSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
         field.setFont(UIConstantes.TEXTO_FONT);
         field.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
-    
+        field.setBackground(InstaColores.INPUT_BG);
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
         return field;
     }
     
     private JPasswordField CrearCampoContrasena() {
         JPasswordField field = new JPasswordField();
-        field.setPreferredSize(new Dimension(300, 40));
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        field.setPreferredSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
+        field.setMaximumSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
         field.setFont(UIConstantes.TEXTO_FONT);
         field.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
-    
+        field.setBackground(InstaColores.INPUT_BG);
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
         return field;
+    }
+    
+    private JComboBox<String> CrearComboBox(String[] opciones) {
+        JComboBox<String> combo = new JComboBox<>(opciones);
+        combo.setFont(UIConstantes.TEXTO_FONT);
+        combo.setPreferredSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
+        combo.setMaximumSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
+        combo.setBackground(InstaColores.INPUT_BG);
+        combo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        return combo;
+    }
+    
+    private JSpinner CrearSpinnerEdad() {
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(18, 1, 120, 1));
+        spinner.setPreferredSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
+        spinner.setMaximumSize(new Dimension(340, UIConstantes.ALTURA_BOTON));
+        spinner.setFont(UIConstantes.TEXTO_FONT);
+        spinner.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JComponent editor = spinner.getEditor();
+        
+        if (editor instanceof JSpinner.DefaultEditor defaultEditor) {
+            defaultEditor.getTextField().setFont(UIConstantes.TEXTO_FONT);
+            defaultEditor.getTextField().setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
+        }
+        
+        return spinner;
     }
     
     private JPanel CrearLabeledField(String label, JComponent componente) {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
-        panel.setLayout(new BorderLayout(0, 6));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         JLabel lbl = new JLabel(label);
-        lbl.setFont(UIConstantes.PEQUENO_FONT);
-        lbl.setForeground(InstaColores.TEXTO_SECUNDARIO);
+        lbl.setFont(new Font("SansSerif", Font.BOLD, 13));
+        lbl.setForeground(InstaColores.TEXTO_PRIMARIO);
+        lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        if (componente instanceof JComboBox<?>) {
-            componente.setPreferredSize(new Dimension(300, 40));
-            componente.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        }
-        
-        if (componente instanceof JSpinner) {
-            componente.setPreferredSize(new Dimension(300, 40));
-            componente.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        }
-        
-        panel.add(lbl, BorderLayout.NORTH);
-        panel.add(componente, BorderLayout.CENTER);
+        panel.add(lbl);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(componente);
         
         return panel;
     }

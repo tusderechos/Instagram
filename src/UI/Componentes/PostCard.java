@@ -29,16 +29,17 @@ public class PostCard extends PanelRedondeado {
     private final PostCardListener Listener;
     private final String UsuarioActual;
     
-    private LikeService likeService;
-    private ComentarioService comentarioService;
+    private final LikeService likeService;
+    private final ComentarioService comentarioService;
     
     private JButton BtnLike;
     private JButton BtnComentar;
     private JLabel LblLikes;
     private JLabel LblComentarios;
+    private JPanel PanelPreviewComentarios;
     
     public PostCard(Publicacion publicacion, PostCardListener Listener, String UsuarioActual) {
-        super(18);
+        super(22);
         this.publicacion = publicacion;
         this.Listener = Listener;
         this.UsuarioActual = UsuarioActual;
@@ -47,9 +48,10 @@ public class PostCard extends PanelRedondeado {
         comentarioService = new ComentarioService();
         
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
-        setMaximumSize(new Dimension(470, 700));
-        setPreferredSize(new Dimension(470, 620));
+        setBackground(InstaColores.CARD);
+        setMaximumSize(new Dimension(500, 760));
+        setPreferredSize(new Dimension(470, 645));
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         
         add(CrearHeader(), BorderLayout.NORTH);
         add(CrearCentro(), BorderLayout.CENTER);
@@ -61,15 +63,23 @@ public class PostCard extends PanelRedondeado {
     private JComponent CrearHeader() {
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
-        header.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        header.setBorder(BorderFactory.createEmptyBorder(14, 14, 12, 14));
         
         JPanel izquierda = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         izquierda.setOpaque(false);
         
-        Image imagen = PlaceHolder.CrearPlaceHolderCircular(36, 36, publicacion.getAutor().isBlank() ? "U" : publicacion.getAutor().substring(0, 1).toUpperCase());
+        String inicial = publicacion.getAutor() != null && !publicacion.getAutor().isBlank() ? publicacion.getAutor().substring(0, 1).toUpperCase() : "U";
+        
+        Image imagen = PlaceHolder.CrearPlaceHolderCircular(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO, inicial);
         
         LabelImagenCircular foto = new LabelImagenCircular(imagen);
-        foto.setPreferredSize(new Dimension(36, 36));
+        foto.setPreferredSize(new Dimension(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO));
+        foto.setMinimumSize(new Dimension(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO));
+        foto.setMaximumSize(new Dimension(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO));
+        
+        JPanel bloquetexto = new JPanel();
+        bloquetexto.setOpaque(false);
+        bloquetexto.setLayout(new BoxLayout(bloquetexto, BoxLayout.Y_AXIS));
         
         JButton botonuser = new JButton(publicacion.getAutor());
         botonuser.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -78,14 +88,25 @@ public class PostCard extends PanelRedondeado {
         botonuser.setContentAreaFilled(false);
         botonuser.setFocusPainted(false);
         botonuser.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botonuser.setMargin(new Insets(0, 0, 0, 0));
+        botonuser.setAlignmentX(Component.LEFT_ALIGNMENT);
         botonuser.addActionListener(e -> {
             if (Listener != null) {
                 Listener.onAbrirPerfil(publicacion.getAutor());
             }
         });
         
+        JLabel lblsub = new JLabel(FormatearFechaHora());
+        lblsub.setFont(UIConstantes.PEQUENO_FONT);
+        lblsub.setForeground(InstaColores.TEXTO_SECUNDARIO);
+        lblsub.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        bloquetexto.add(botonuser);
+        bloquetexto.add(Box.createVerticalStrut(2));
+        bloquetexto.add(lblsub);
+        
         izquierda.add(foto);
-        izquierda.add(botonuser);
+        izquierda.add(bloquetexto);
         
         header.add(izquierda, BorderLayout.WEST);
         return header;
@@ -97,11 +118,11 @@ public class PostCard extends PanelRedondeado {
         
         JLabel imagen = new JLabel();
         imagen.setOpaque(true);
-        imagen.setBackground(new Color(245, 245, 245));
+        imagen.setBackground(InstaColores.FONDO_SECUNDARIO);
         imagen.setHorizontalAlignment(SwingConstants.CENTER);
         imagen.setVerticalAlignment(SwingConstants.CENTER);
         imagen.setPreferredSize(new Dimension(470, 420));
-        imagen.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InstaColores.BORDER));
+        imagen.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InstaColores.DIVISOR));
         
         if (publicacion.getRutaImagen() != null && !publicacion.getRutaImagen().isBlank()) {
             ImageIcon icono = new ImageIcon(publicacion.getRutaImagen());
@@ -113,10 +134,12 @@ public class PostCard extends PanelRedondeado {
             } else {
                 imagen.setText("Imagen no disponible");
                 imagen.setForeground(InstaColores.TEXTO_SECUNDARIO);
+                imagen.setFont(UIConstantes.TEXTO_FONT);
             }
         } else {
             imagen.setText("Sin Imagen");
             imagen.setForeground(InstaColores.TEXTO_SECUNDARIO);
+            imagen.setFont(UIConstantes.TEXTO_FONT);
         }
         
         centro.add(imagen, BorderLayout.CENTER);
@@ -127,7 +150,7 @@ public class PostCard extends PanelRedondeado {
         JPanel footer = new JPanel();
         footer.setOpaque(false);
         footer.setLayout(new BoxLayout(footer, BoxLayout.Y_AXIS));
-        footer.setBorder(BorderFactory.createEmptyBorder(12, 14, 14, 14));
+        footer.setBorder(BorderFactory.createEmptyBorder(12, 16, 16, 16));
         
         JPanel acciones = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         acciones.setOpaque(false);
@@ -139,6 +162,7 @@ public class PostCard extends PanelRedondeado {
         BtnLike.setFocusPainted(false);
         BtnLike.setFont(new Font("SansSerif", Font.PLAIN, 18));
         BtnLike.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        BtnLike.setMargin(new Insets(0, 0, 0, 0));
         
         BtnComentar = new JButton("💬");
         BtnComentar.setBorderPainted(false);
@@ -146,6 +170,7 @@ public class PostCard extends PanelRedondeado {
         BtnComentar.setFocusPainted(false);
         BtnComentar.setFont(new Font("SansSerif", Font.PLAIN, 18));
         BtnComentar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        BtnComentar.setMargin(new Insets(0, 0, 0, 0));
         
         LblLikes = new JLabel();
         LblLikes.setFont(UIConstantes.PEQUENO_FONT);
@@ -160,14 +185,19 @@ public class PostCard extends PanelRedondeado {
         
         acciones.add(BtnLike);
         acciones.add(LblLikes);
-        acciones.add(Box.createHorizontalStrut(14));
+        acciones.add(Box.createHorizontalStrut(10));
         acciones.add(BtnComentar);
         acciones.add(LblComentarios);
         
-        JLabel lblcontenido = new JLabel("<html><b>" + publicacion.getAutor() + " </b> " + Escapar(publicacion.getContenido()) + "</html>");
+        JLabel lblcontenido = new JLabel("<html><div style='width:410px;'><b>" + publicacion.getAutor() + " </b> " + Escapar(publicacion.getContenido()) + "</div></html>");
         lblcontenido.setFont(UIConstantes.TEXTO_FONT);
         lblcontenido.setForeground(InstaColores.TEXTO_PRIMARIO);
         lblcontenido.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        PanelPreviewComentarios = new JPanel();
+        PanelPreviewComentarios.setOpaque(false);
+        PanelPreviewComentarios.setLayout(new BoxLayout(PanelPreviewComentarios, BoxLayout.Y_AXIS));
+        PanelPreviewComentarios.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JLabel lblfecha = new JLabel(FormatearFechaHora());
         lblfecha.setFont(UIConstantes.PEQUENO_FONT);
@@ -175,42 +205,34 @@ public class PostCard extends PanelRedondeado {
         lblfecha.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         footer.add(acciones);
-        footer.add(Box.createVerticalStrut(8));
+        footer.add(Box.createVerticalStrut(10));
         footer.add(lblcontenido);
-        footer.add(Box.createVerticalStrut(8));
-        
-        JPanel previewcomentarios = CrearPreviewComentarios();
-        
-        if (previewcomentarios.getComponentCount() > 0) {
-            footer.add(previewcomentarios);
-            footer.add(Box.createVerticalStrut(8));
-        }
-        
+        footer.add(Box.createVerticalStrut(10));
+        footer.add(PanelPreviewComentarios);
+        footer.add(Box.createVerticalStrut(6));
         footer.add(lblfecha);
+        
+        ReconstuirPreviewComentarios();
                
         return footer;
     }
     
-    private JPanel CrearPreviewComentarios() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    private void ReconstuirPreviewComentarios() {
+        PanelPreviewComentarios.removeAll();
         
         ArrayList<Comentario> comentarios = comentarioService.ListarComentarios(publicacion.getID(), publicacion.getAutor());
-        
         int limite = Math.min(2, comentarios.size());
         
         for (int i = 0; i < limite; i++) {
             Comentario comentario = comentarios.get(i);
             
-            JLabel lblcomentario = new JLabel("<html><b>" + Escapar(comentario.getUsuario()) + " </b> " + Escapar(comentario.getTexto()) + "</html>");
+            JLabel lblcomentario = new JLabel("<html><div style='width:410px;'><b>" + Escapar(comentario.getUsuario()) + " </b> " + Escapar(comentario.getTexto()) + "</div></html>");
             lblcomentario.setFont(UIConstantes.PEQUENO_FONT);
             lblcomentario.setForeground(InstaColores.TEXTO_PRIMARIO);
             lblcomentario.setAlignmentX(Component.LEFT_ALIGNMENT);
             
-            panel.add(lblcomentario);
-            panel.add(Box.createVerticalStrut(4));
+            PanelPreviewComentarios.add(lblcomentario);
+            PanelPreviewComentarios.add(Box.createVerticalStrut(5));
         }
         
         if (comentarios.size() > 2) {
@@ -224,10 +246,11 @@ public class PostCard extends PanelRedondeado {
             btnvertodos.setAlignmentX(Component.LEFT_ALIGNMENT);
             btnvertodos.addActionListener(e -> AbrirComentarios());
             
-            panel.add(btnvertodos);
+            PanelPreviewComentarios.add(btnvertodos);
         }
         
-        return panel;
+        PanelPreviewComentarios.revalidate();
+        PanelPreviewComentarios.repaint();        
     }
     
     private void ManejarLike() {
@@ -258,7 +281,7 @@ public class PostCard extends PanelRedondeado {
         
         if (diolike) {
             BtnLike.setText("❤");
-            BtnLike.setForeground(Color.RED);
+            BtnLike.setForeground(InstaColores.LIKE);
         } else {
             BtnLike.setText("♡");
             BtnLike.setForeground(InstaColores.TEXTO_PRIMARIO);
@@ -270,6 +293,8 @@ public class PostCard extends PanelRedondeado {
         LblLikes.setText(totallikes + (totallikes == 1 ? " like" : " likes"));
         LblComentarios.setText(totalcomentarios + (totalcomentarios == 1 ? " comentario" : " comentarios"));
         
+        ReconstuirPreviewComentarios();
+        
         revalidate();
         repaint();
     }
@@ -280,6 +305,10 @@ public class PostCard extends PanelRedondeado {
         
         if (hora.length() >= 5) {
             hora = hora.substring(0, 5);
+        }
+        
+        if (fecha.isBlank() && hora.isBlank()) {
+            return "";
         }
         
         return fecha + " " + hora;

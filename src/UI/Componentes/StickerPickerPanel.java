@@ -40,16 +40,15 @@ public class StickerPickerPanel extends JPanel {
         setBackground(Color.WHITE);
         
         JPanel panelsuperior = new JPanel(new BorderLayout());
-        panelsuperior.setBackground(Color.WHITE);
-        panelsuperior.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panelsuperior.setBackground(InstaColores.CARD);
+        panelsuperior.setBorder(new EmptyBorder(14, 14, 14, 14));
         
         JLabel lbltitulo = new JLabel("Stickes");
         lbltitulo.setFont(UIConstantes.SUBTITULO_FONT);
         lbltitulo.setForeground(InstaColores.TEXTO_PRIMARIO);
         
-        JButton btnimportar = new JButton("+ Importar");
-        btnimportar.setFocusPainted(false);
-        btnimportar.setFont(UIConstantes.PEQUENO_FONT);
+        BotonRedondeado btnimportar = new BotonRedondeado("Importar");
+        btnimportar.setPreferredSize(new Dimension(110, UIConstantes.ALTURA_BOTON_PEQUENO));
         btnimportar.addActionListener(e -> ImportarStickerPersonal());
         
         panelsuperior.add(lbltitulo, BorderLayout.WEST);
@@ -57,17 +56,18 @@ public class StickerPickerPanel extends JPanel {
         
         PanelContenido = new JPanel();
         PanelContenido.setLayout(new BoxLayout(PanelContenido, BoxLayout.Y_AXIS));
-        PanelContenido.setBackground(Color.WHITE);
-        PanelContenido.setBorder(new EmptyBorder(0, 10, 10, 10));
+        PanelContenido.setBackground(InstaColores.FONDO);
+        PanelContenido.setBorder(new EmptyBorder(012, 14, 14, 14));
         
         JScrollPane scroll = new JScrollPane(PanelContenido);
         scroll.setBorder(null);
+        scroll.getViewport().setBackground(InstaColores.FONDO);
         scroll.getVerticalScrollBar().setUnitIncrement(14);
         
         LblEstado = new JLabel(" ");
         LblEstado.setFont(UIConstantes.PEQUENO_FONT);
         LblEstado.setForeground(InstaColores.TEXTO_SECUNDARIO);
-        LblEstado.setBorder(new EmptyBorder(0, 10, 10, 10));
+        LblEstado.setBorder(new EmptyBorder(0, 14, 12, 14));
         
         add(panelsuperior, BorderLayout.NORTH);
         add(scroll, BorderLayout.CENTER);
@@ -86,10 +86,17 @@ public class StickerPickerPanel extends JPanel {
         AgregarSeccion("Personales", personales);
         
         if (globales.isEmpty() && personales.isEmpty()) {
+            PanelRedondeado vacio = new PanelRedondeado(UIConstantes.ARCO_CARD);
+            vacio.setLayout(new BoxLayout(vacio, BoxLayout.Y_AXIS));
+            vacio.setBackground(InstaColores.CARD);
+            vacio.setBorder(BorderFactory.createEmptyBorder(24, 20, 24, 20));
+            
             JLabel lblvacio = new JLabel("No hay stickers disponibles");
             lblvacio.setFont(UIConstantes.TEXTO_FONT);
             lblvacio.setForeground(InstaColores.TEXTO_SECUNDARIO);
             lblvacio.setAlignmentX(Component.LEFT_ALIGNMENT);
+            
+            vacio.add(lblvacio);
             PanelContenido.add(lblvacio);
         }
         
@@ -107,7 +114,7 @@ public class StickerPickerPanel extends JPanel {
         PanelContenido.add(Box.createVerticalStrut(8));
         
         JPanel grid = new JPanel(new GridLayout(0, 3, 10, 10));
-        grid.setBackground(Color.WHITE);
+        grid.setBackground(InstaColores.FONDO);
         grid.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         for (String ruta : rutas) {
@@ -116,31 +123,29 @@ public class StickerPickerPanel extends JPanel {
         }
         
         PanelContenido.add(grid);
-        PanelContenido.add(Box.createVerticalStrut(15));
+        PanelContenido.add(Box.createVerticalStrut(16));
     }
     
     private JButton CrearBotonSticker(String rutasticker) {
         JButton boton = new JButton();
         boton.setFocusPainted(false);
         boton.setContentAreaFilled(false);
-        boton.setBorder(BorderFactory.createLineBorder(InstaColores.BORDER));
+        boton.setBorder(BorderFactory.createLineBorder(InstaColores.BORDER_SUAVE));
+        boton.setBackground(InstaColores.CARD);
+        boton.setOpaque(false);
         boton.setPreferredSize(new Dimension(90, 90));
-        
-        System.out.println("cargando sticker en picker: " + rutasticker);
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         File archivo = new File(rutasticker);
-        System.out.println("existe archivo: " + archivo.exists());
-        System.out.println("es archivo: " + archivo.isFile());
-        
         ImageIcon icono = new ImageIcon(rutasticker);
-        System.out.println("ancho icono " + icono.getIconWidth());
-        System.out.println("alto icono " + icono.getIconHeight());
         
-        if (icono.getIconWidth() > 0 && icono.getIconHeight() > 0) {
+        if (archivo.exists() && archivo.isFile() && icono.getIconWidth() > 0 && icono.getIconHeight() > 0) {
             Image imagen = icono.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
             boton.setIcon(new ImageIcon(imagen));
         } else {
             boton.setText("Sticker");
+            boton.setFont(UIConstantes.PEQUENO_FONT);
+            boton.setForeground(InstaColores.TEXTO_SECUNDARIO);
         }
         
         boton.addActionListener(e -> AccionSeleccionarSticker.accept(rutasticker));

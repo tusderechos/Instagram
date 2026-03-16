@@ -32,6 +32,18 @@ public class UIConstantes {
     
     public static final int ARCO_CARD = 24;
     public static final int ARCO_INPUT = 18;
+    public static final int ARCO_BOTON = 18;
+    
+    public static final int PADDING_CARD = 16;
+    public static final int PADDING_CARD_GRANDE = 20;
+    public static final int PADDING_INTERNO = 12;
+    
+    public static final int ALTURA_BOTON = 42;
+    public static final int ALTURA_BOTON_PEQUENO = 36;
+    
+    public static final int AVATAR_PEQUENO = 36;
+    public static final int AVATAR_MEDIANO = 54;
+    public static final int AVATAR_GRANDE = 110;
     
     private UIConstantes() {
         

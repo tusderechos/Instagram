@@ -21,9 +21,12 @@ import UI.Componentes.PostCard;
 import UI.Componentes.PerfilHeader;
 import UI.Componentes.MessageBar;
 import UI.Componentes.ConfirmDialog;
+import UI.Componentes.PanelRedondeado;
+import UI.Componentes.BotonRedondeado;
 import UI.Core.SessionManager;
 import interfaces.AppNavigator;
 import UI.Styles.InstaColores;
+import UI.Styles.UIConstantes;
 import interfaces.NavigationListener;
 
 import javax.swing.*;
@@ -78,53 +81,47 @@ public class PerfilPanel extends JPanel {
         PanelContenido = new JPanel();
         PanelContenido.setBackground(InstaColores.FONDO);
         PanelContenido.setLayout(new BoxLayout(PanelContenido, BoxLayout.Y_AXIS));
-        PanelContenido.setBorder(BorderFactory.createEmptyBorder(10, 40, 30, 40));
+        PanelContenido.setBorder(BorderFactory.createEmptyBorder(14, 34, 30, 34));
 
         Header = new PerfilHeader(this::ManejarAccionPrincipal);
         Header.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        PanelAccionesSecundarias = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        PanelAccionesSecundarias = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         PanelAccionesSecundarias.setOpaque(false);
         PanelAccionesSecundarias.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        BtnMensaje = new JButton("Mensaje");
-        BtnMensaje.setFocusPainted(false);
+        BtnMensaje = new BotonRedondeado("Mensaje");
+        BtnMensaje.setPreferredSize(new Dimension(130, UIConstantes.ALTURA_BOTON_PEQUENO));
         BtnMensaje.setVisible(false);
         BtnMensaje.addActionListener(e -> AbrirChatConPerfilActual());
         
-        BtnDesactivarCuenta = new JButton("Desactivar cuenta");
-        BtnDesactivarCuenta.setFocusPainted(false);
+        BtnDesactivarCuenta = new BotonRedondeado("Desactivar cuenta");
+        BtnDesactivarCuenta.setPreferredSize(new Dimension(180, UIConstantes.ALTURA_BOTON_PEQUENO));
         BtnDesactivarCuenta.setVisible(false);
         BtnDesactivarCuenta.addActionListener(e -> DesactivarCuentaActual());
         
         PanelAccionesSecundarias.add(BtnMensaje);
-        PanelAccionesSecundarias.add(Box.createHorizontalStrut(10));
         PanelAccionesSecundarias.add(BtnDesactivarCuenta);
         
         JSeparator separador = new JSeparator();
-        separador.setForeground(InstaColores.BORDER);
+        separador.setForeground(InstaColores.DIVISOR);
         separador.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
         separador.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         LblEstadoPrivado = new JLabel("", SwingConstants.CENTER);
-        LblEstadoPrivado.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        LblEstadoPrivado.setFont(UIConstantes.TEXTO_FONT);
         LblEstadoPrivado.setForeground(InstaColores.TEXTO_SECUNDARIO);
         LblEstadoPrivado.setAlignmentX(Component.CENTER_ALIGNMENT);
         LblEstadoPrivado.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
         
-        PanelGrid = new JPanel(new GridLayout(0, 3, 6, 6));
+        PanelGrid = new JPanel(new GridLayout(0, 3, 10, 10));
         PanelGrid.setOpaque(false);
-        PanelGrid.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
-        
-        JPanel gridwrapper = new JPanel(new BorderLayout());
-        gridwrapper.setOpaque(false);
-        gridwrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
-        gridwrapper.add(PanelGrid, BorderLayout.NORTH);
+        PanelGrid.setBorder(BorderFactory.createEmptyBorder(6, 0, 20, 0));
         
         PanelContenido.add(Header);
         PanelContenido.add(Box.createVerticalStrut(8));
         PanelContenido.add(PanelAccionesSecundarias);
-        PanelContenido.add(Box.createVerticalStrut(10));
+        PanelContenido.add(Box.createVerticalStrut(14));
         PanelContenido.add(separador);
         PanelContenido.add(Box.createVerticalStrut(20));
         PanelContenido.add(LblEstadoPrivado);
@@ -133,6 +130,7 @@ public class PerfilPanel extends JPanel {
         ScrollPane = new JScrollPane(PanelContenido);
         ScrollPane.setBorder(null);
         ScrollPane.getViewport().setBackground(InstaColores.FONDO);
+        ScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         ScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         
         add(messageBar, BorderLayout.NORTH);
@@ -176,8 +174,7 @@ public class PerfilPanel extends JPanel {
         PanelGrid.removeAll();
         
         if (!puedeverposts) {
-            LblEstadoPrivado.setText("Esta cuenta es privada. Debes seguirla para ver sus publicaciones");
-            LblEstadoPrivado.setVisible(true);
+            MostrarEstadoCentral("Cuenta privada", "Debes seguir esta cuenta para ver sus publicaciones");
         } else {
             CargarGridPublicaciones(usuarioperfil);
         }
@@ -192,8 +189,7 @@ public class PerfilPanel extends JPanel {
     
     private void MostrarPerfilNoDisponible() {
         PanelGrid.removeAll();
-        LblEstadoPrivado.setText("Perfil no disponible");
-        LblEstadoPrivado.setVisible(true);
+        MostrarEstadoCentral("Perfil no disponible", "Este perfil ya no existe o no esta disponible");
         
         PanelContenido.revalidate();
         PanelContenido.repaint();
@@ -201,12 +197,16 @@ public class PerfilPanel extends JPanel {
         repaint();
     }
     
+    private void MostrarEstadoCentral(String titulo, String subtitulo) {
+        LblEstadoPrivado.setText("<html><div style='text-align:center;'>" + "<span style='font-weight:bold; color:#202020;'>" + titulo + "</span><br><br>" + "<span style ='color:#787880;'>" + subtitulo + "</span>" + "</div></html>");
+        LblEstadoPrivado.setVisible(true);
+    }
+    
     private void CargarGridPublicaciones(String usuarioperfil) {
         ArrayList<Publicacion> publicaciones = publicacionService.ListarPublicacionesDe(usuarioperfil);
         
         if (publicaciones.isEmpty()) {
-            LblEstadoPrivado.setText("Este usuario todavia no tiene publicaciones");
-            LblEstadoPrivado.setVisible(true);
+            MostrarEstadoCentral("Sin publicaciones", "Este usuario todavia no tiene publicaciones");
             return;
         }
         
@@ -219,16 +219,17 @@ public class PerfilPanel extends JPanel {
     }
     
     private JPanel CrearMiniPost(Publicacion post) {
-        JPanel panel = new JPanel(new BorderLayout());
+        PanelRedondeado panel = new PanelRedondeado(18);
+        panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(220, 220));
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createLineBorder(InstaColores.BORDER));
+        panel.setBackground(InstaColores.CARD);
         
         JLabel lblimagen = new JLabel();
         lblimagen.setHorizontalAlignment(SwingConstants.CENTER);
         lblimagen.setVerticalAlignment(SwingConstants.CENTER);
         lblimagen.setOpaque(true);
-        lblimagen.setBackground(new Color(245, 245, 245));
+        lblimagen.setBackground(InstaColores.FONDO_SECUNDARIO);
+        lblimagen.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         
         if (post.getRutaImagen() != null && !post.getRutaImagen().isBlank()) {
             ImageIcon icono = new ImageIcon(post.getRutaImagen());
@@ -265,9 +266,14 @@ public class PerfilPanel extends JPanel {
         dialogo.setLayout(new BorderLayout());
         dialogo.getContentPane().setBackground(InstaColores.FONDO);
         
-        PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario), sessionManager.getUsuarioActual());
-        dialogo.add(card, BorderLayout.CENTER);
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 18));
+        wrapper.setOpaque(false);
+        wrapper.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         
+        PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario), sessionManager.getUsuarioActual());
+        wrapper.add(card);
+        
+        dialogo.add(wrapper, BorderLayout.CENTER);
         dialogo.setVisible(true);
     }
     
@@ -392,7 +398,7 @@ public class PerfilPanel extends JPanel {
         if (exito) {
             sessionManager.setMensajePendienteLogin("Tu cuenta fue desactivada correctamente");
             sessionManager.CerrarSesion();
-            
+            navigationListener.irALogin();
         } else {
             messageBar.MostrarError("No se pudo desactivar la cuenta");
             ProgramarOcultarBarra();

@@ -262,21 +262,29 @@ public class PerfilPanel extends JPanel {
     
     private void MostrarDetallePost(Publicacion post) {
         JDialog dialogo = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Publicacion", true);
-        dialogo.setSize(650, 720);
+        dialogo.setSize(650, 800);
         dialogo.setLocationRelativeTo(this);
-        dialogo.setLayout(new BorderLayout());
         dialogo.getContentPane().setBackground(InstaColores.FONDO);
-        
-        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 18));
-        wrapper.setOpaque(false);
-        wrapper.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-        
+        dialogo.setLayout(new BorderLayout());
+
         PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario), sessionManager.getUsuarioActual());
-        wrapper.add(card);
-        
-        dialogo.add(wrapper, BorderLayout.CENTER);
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JPanel contenedor = new JPanel();
+        contenedor.setLayout(new BoxLayout(contenedor, BoxLayout.Y_AXIS));
+        contenedor.setBackground(InstaColores.FONDO);
+        contenedor.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+        contenedor.add(card);
+
+        JScrollPane scroll = new JScrollPane(contenedor);
+        scroll.setBorder(null);
+        scroll.getViewport().setBackground(InstaColores.FONDO);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+
+        dialogo.add(scroll, BorderLayout.CENTER);
         dialogo.setVisible(true);
-    }
+    }        
     
     private void ManejarAccionPrincipal() {
         String viewer = sessionManager.getUsuarioActual();

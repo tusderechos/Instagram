@@ -57,7 +57,7 @@ public class PostCard extends PanelRedondeado {
         setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
         setMinimumSize(new Dimension(500, 0));
         setAlignmentX(Component.CENTER_ALIGNMENT);
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        setBorder(BorderFactory.createEmptyBorder(16, 8, 16, 8));
         
         add(CrearHeader(), BorderLayout.NORTH);
         add(CrearCentro(), BorderLayout.CENTER);

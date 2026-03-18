@@ -53,26 +53,30 @@ public class PerfilHeader extends JPanel {
         JPanel derecha = new JPanel();
         derecha.setOpaque(false);
         derecha.setLayout(new BoxLayout(derecha, BoxLayout.Y_AXIS));
+        derecha.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        JPanel filatop = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
+        JPanel filatop = new JPanel(new BorderLayout(12, 0));
         filatop.setOpaque(false);
         filatop.setAlignmentX(Component.LEFT_ALIGNMENT);
+        filatop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         
         LblUsuario = new JLabel("@usuario");
         LblUsuario.setFont(new Font("SansSerif", Font.PLAIN, 24));
         LblUsuario.setForeground(InstaColores.TEXTO_PRIMARIO);
+        LblUsuario.setVerticalAlignment(SwingConstants.CENTER);
         
         BtnAccion = new BotonRedondeado("Seguir");
         BtnAccion.setPreferredSize(new Dimension(175, UIConstantes.ALTURA_BOTON_PEQUENO));
         BtnAccion.setMaximumSize(new Dimension(175, UIConstantes.ALTURA_BOTON_PEQUENO));
+        BtnAccion.setMinimumSize(new Dimension(175, UIConstantes.ALTURA_BOTON_PEQUENO));
         BtnAccion.addActionListener(e -> {
             if (Listener != null) {
                 Listener.onAccionPrincipal();
             }
         });
         
-        filatop.add(LblUsuario);
-        filatop.add(BtnAccion);
+        filatop.add(LblUsuario, BorderLayout.WEST);
+        filatop.add(BtnAccion, BorderLayout.EAST);
         
         JPanel filastats = new JPanel(new FlowLayout(FlowLayout.LEFT, 28, 0));
         filastats.setOpaque(false);

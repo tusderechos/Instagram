@@ -57,7 +57,7 @@ public class BuscarPanel extends JPanel {
         ResultadosPanel = new JPanel();
         ResultadosPanel.setOpaque(false);
         ResultadosPanel.setLayout(new BoxLayout(ResultadosPanel, BoxLayout.Y_AXIS));
-        ResultadosPanel.setBorder(BorderFactory.createEmptyBorder(10, 24, 24, 24));
+        ResultadosPanel.setBorder(BorderFactory.createEmptyBorder(18, 230, 24, 230));
         
         ScrollPane = new JScrollPane(ResultadosPanel);
         ScrollPane.setBorder(null);
@@ -221,7 +221,7 @@ public class BuscarPanel extends JPanel {
         
         for (Publicacion publicacion : publicaciones) {
             PostCard card = new PostCard(publicacion, username -> appNavigator.irAPerfil(username), sessionManager.getUsuarioActual());
-            card.setAlignmentX(Component.CENTER_ALIGNMENT);
+            card.setAlignmentX(Component.LEFT_ALIGNMENT);
             ResultadosPanel.add(card);
             ResultadosPanel.add(Box.createVerticalStrut(22));
         }

@@ -34,7 +34,6 @@ public class BuscarPanel extends JPanel {
     
     private MessageBar messageBar;
     private JTextField TxtBuscar;
-    private JComboBox<String> CBTipoBusqueda;
     private JPanel ResultadosPanel;
     private JScrollPane ScrollPane;
     
@@ -91,7 +90,7 @@ public class BuscarPanel extends JPanel {
         titulo.setForeground(InstaColores.TEXTO_PRIMARIO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        JLabel subtitulo = new JLabel("Encuentra usuario o publicaciones por hashtag");
+        JLabel subtitulo = new JLabel("Busca un usuario que sea tu amigo o un hashtag popular!");
         subtitulo.setFont(UIConstantes.TEXTO_FONT);
         subtitulo.setForeground(InstaColores.TEXTO_SECUNDARIO);
         subtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -107,29 +106,26 @@ public class BuscarPanel extends JPanel {
         TxtBuscar.setFont(UIConstantes.TEXTO_FONT);
         TxtBuscar.setBackground(InstaColores.INPUT_BG);
         TxtBuscar.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER_SUAVE), BorderFactory.createEmptyBorder(11, 12, 11, 12)));
-        
-        CBTipoBusqueda = new JComboBox<>(new String[]{"Usuarios", "Hashtags"});
-        CBTipoBusqueda.setFont(UIConstantes.TEXTO_FONT);
-        CBTipoBusqueda.setPreferredSize(new Dimension(140, UIConstantes.ALTURA_BOTON));
+        TxtBuscar.addActionListener(e -> Buscar());
         
         BotonRedondeado btnbuscar = new BotonRedondeado("Buscar");
         btnbuscar.setPreferredSize(new Dimension(120, UIConstantes.ALTURA_BOTON));
         btnbuscar.addActionListener(e -> Buscar());
         
-        JPanel derecha = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        derecha.setOpaque(false);
-        
-        derecha.add(CBTipoBusqueda);
-        derecha.add(btnbuscar);
-        
         barra.add(TxtBuscar, BorderLayout.CENTER);
-        barra.add(derecha, BorderLayout.EAST);
+        barra.add(btnbuscar, BorderLayout.EAST);
         
         topcard.add(izquierda, BorderLayout.NORTH);
         topcard.add(barra, BorderLayout.SOUTH);
         
         wrapper.add(topcard, BorderLayout.CENTER);
         return wrapper;
+    }
+    
+    public void ReiniciarBusqueda() {
+        TxtBuscar.setText("");
+        messageBar.Ocultar();
+        MostrarMensajeInicial();
     }
     
     private void MostrarMensajeInicial() {
@@ -152,7 +148,7 @@ public class BuscarPanel extends JPanel {
         titulo.setForeground(InstaColores.TEXTO_PRIMARIO);
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        JLabel subtitulo = new JLabel("<html><div style='text-align:center;'>Escribe un nombre de usuario o un hashtag para comenzar.</div></html>");
+        JLabel subtitulo = new JLabel("<html><div style='text-align:center;'>Si buscar algo que empieze con un '#', se buscara como un hashtag, y si no lo pones, se buscara como un usuario.</div></html>");
         subtitulo.setFont(UIConstantes.TEXTO_FONT);
         subtitulo.setForeground(InstaColores.TEXTO_SECUNDARIO);
         subtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -174,7 +170,6 @@ public class BuscarPanel extends JPanel {
     
     private void Buscar() {
         String texto = TxtBuscar.getText().trim();
-        String tipo = (String) CBTipoBusqueda.getSelectedItem();
         
         if (texto.isBlank()) {
             messageBar.MostrarError("Escribe algo para buscar");
@@ -184,10 +179,10 @@ public class BuscarPanel extends JPanel {
         
         ResultadosPanel.removeAll();
         
-        if (tipo.equals("Usuarios")) {
-            BuscarUsuarios(texto);
-        } else {
+        if (texto.startsWith("#")) {
             BuscarHashtags(texto);
+        } else {
+            BuscarUsuarios(texto);
         }
         
         ResultadosPanel.revalidate();

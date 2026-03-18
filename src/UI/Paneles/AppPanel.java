@@ -94,6 +94,7 @@ public class AppPanel extends JPanel implements AppNavigator {
     public void RefrescarDatos() {
         Sidebar.RefrescarSesion();
         inboxPanel.ReiniciarInbox();
+        buscarPanel.ReiniciarBusqueda();
         irAFeed();
     }
     

@@ -50,7 +50,7 @@ public class LoginPanel extends JPanel {
         
         PanelRedondeado maincard = new PanelRedondeado(UIConstantes.ARCO_CARD);
         maincard.setLayout(new BoxLayout(maincard, BoxLayout.Y_AXIS));
-        maincard.setPreferredSize(new Dimension(420, 430));
+        maincard.setPreferredSize(new Dimension(420, 470));
         maincard.setBackground(InstaColores.CARD);
         maincard.setBorder(new EmptyBorder(30, 36, 28, 36));
         
@@ -86,6 +86,16 @@ public class LoginPanel extends JPanel {
         btnirregistro.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnirregistro.addActionListener(e -> navigationListener.irARegistro());
         
+        JButton btnreactivar = new JButton("Reactivar cuenta");
+        btnreactivar.setFont(UIConstantes.PEQUENO_FONT);
+        btnreactivar.setForeground(InstaColores.AZUL);
+        btnreactivar.setContentAreaFilled(false);
+        btnreactivar.setBorderPainted(false);
+        btnreactivar.setFocusPainted(false);
+        btnreactivar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnreactivar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnreactivar.addActionListener(e -> ReactivarCuenta());
+        
         LblEstado = new JLabel(" ");
         LblEstado.setFont(UIConstantes.PEQUENO_FONT);
         LblEstado.setForeground(InstaColores.ERROR);
@@ -110,10 +120,12 @@ public class LoginPanel extends JPanel {
         maincard.add(Box.createVerticalStrut(20));
         
         maincard.add(btnlogin);
-        maincard.add(Box.createVerticalStrut(12));
+        maincard.add(Box.createVerticalStrut(10));
         maincard.add(LblEstado);
-        maincard.add(Box.createVerticalStrut(20));
+        maincard.add(Box.createVerticalStrut(12));
         maincard.add(btnirregistro);
+        maincard.add(Box.createVerticalStrut(20));
+        maincard.add(btnreactivar);
         
         add(maincard, gbc);
     }
@@ -192,6 +204,26 @@ public class LoginPanel extends JPanel {
         
         navigationListener.irAApp();
     }   
+    
+    private void ReactivarCuenta() {
+        String usuario = TxtUsuario.getText().trim();
+        String contrasena = new String(TxtContrasena.getPassword());
+        
+        if (usuario.isBlank() || contrasena.isBlank()) {
+            MostrarError("Escribe usuario y contrasena para reactivar");
+            return;
+        }
+        
+        boolean reactivada = usuarioService.ReactivarCuenta(usuario, contrasena);
+        
+        if (!reactivada) {
+            MostrarError("No se pudo reactivar la cuenta");
+            return;
+        }
+        
+        LimpiarEstado();
+        MostrarAviso("Cuenta reactivada correctamente. Ya puedes iniciar sesion");
+    }
     
     public void MostrarMensajePendiente() {
         String mensaje = sessionManager.ConsumirMensajePendienteLogin();

@@ -172,6 +172,24 @@ public class UsuarioService {
         return usersRAF.Actualizar(usuario);
     }
     
+    public boolean ReactivarCuenta(String usuario, String contrasena) {
+        if (usuario == null || usuario.isBlank() || contrasena == null || contrasena.isBlank()) {
+            return false;
+        }
+        
+        Usuario user = usersRAF.Buscar(usuario);
+        
+        if (user == null) {
+            return false;
+        }
+        
+        if (!user.getContrasena().equals(contrasena)) {
+            return false;
+        }
+        
+        return usersRAF.CambiarEstadoCuenta(usuario, EstadoCuenta.ACTIVA);
+    }
+    
     public UsersRAF getUsersRAF() {
         return usersRAF;
     }

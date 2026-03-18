@@ -18,7 +18,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class ConversacionesInboxRenderer extends JPanel implements ListCellRenderer<String>{
+public class ConversacionesInboxRenderer extends JPanel implements ListCellRenderer<String> {
     
     private final SessionManager sessionManager;
     
@@ -30,7 +30,7 @@ public class ConversacionesInboxRenderer extends JPanel implements ListCellRende
     public ConversacionesInboxRenderer(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
         
-        setLayout(new BorderLayout(10, 0));
+        setLayout(new BorderLayout(12, 0));
         setBorder(new EmptyBorder(10, 12, 10, 12));
         setOpaque(true);
         
@@ -54,9 +54,10 @@ public class ConversacionesInboxRenderer extends JPanel implements ListCellRende
         LblHora.setFont(UIConstantes.PEQUENO_FONT);
         LblHora.setForeground(InstaColores.TEXTO_SECUNDARIO);
         LblHora.setHorizontalAlignment(SwingConstants.RIGHT);
+        LblHora.setAlignmentX(Component.RIGHT_ALIGNMENT);
         
         LblNoLeidos = new JLabel("●");
-        LblNoLeidos.setForeground(new Color(0, 120, 255));
+        LblNoLeidos.setForeground(InstaColores.AZUL);
         LblNoLeidos.setFont(new Font("SansSerif", Font.BOLD, 12));
         LblNoLeidos.setAlignmentX(Component.RIGHT_ALIGNMENT);
         LblNoLeidos.setVisible(false);
@@ -66,7 +67,7 @@ public class ConversacionesInboxRenderer extends JPanel implements ListCellRende
         paneltexto.add(LblPreview);
         
         panelderecho.add(LblHora);
-        panelderecho.add(Box.createVerticalStrut(6));
+        panelderecho.add(Box.createVerticalStrut(8));
         panelderecho.add(LblNoLeidos);
         
         add(paneltexto, BorderLayout.CENTER);
@@ -83,14 +84,22 @@ public class ConversacionesInboxRenderer extends JPanel implements ListCellRende
         
         if (chat != null) {
             preview = chat.ObtenerPreviewUltimoMensajeDe(value);
-            hora = chat.ObtenerHoraUltimoMensajeDe(hora);
+            hora = chat.ObtenerHoraUltimoMensajeDe(value);
             noleidos = chat.ContarNoLeidosDe(value);
+        }
+        
+        if (preview == null || preview.isBlank()) {
+            preview = "Sin mensajes";
+        }
+        
+        if (hora == null) {
+            hora = "";
         }
         
         boolean tienenoleidos = noleidos > 0;
         
         LblUsuario.setText("@" + value);
-        LblPreview.setText("<html><body style='width:160px'>" + preview + "</body></html>");
+        LblPreview.setText("<html><body style='width:160px'>" + Escapar(preview) + "</body></html>");
         LblHora.setText(hora);
         LblNoLeidos.setVisible(tienenoleidos);
         
@@ -103,13 +112,21 @@ public class ConversacionesInboxRenderer extends JPanel implements ListCellRende
         }
         
         if (isSelected) {
-            setBackground(new Color(240, 242, 245));
+            setBackground(InstaColores.FONDO_SECUNDARIO);
         } else if (tienenoleidos) {
             setBackground(new Color(248, 250, 252));
         } else {
-            setBackground(Color.WHITE);
+            setBackground(InstaColores.CARD);
         }
         
         return this;
+    }
+    
+    private String Escapar(String texto) {
+        if (texto == null) {
+            return "";
+        }
+        
+        return texto.replace("&", "&amp;").replace("<", "&lt;").replace(">", "^gt;");
     }
 }

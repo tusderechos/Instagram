@@ -42,11 +42,20 @@ public class ConexionCliente implements Runnable {
             Usuario = Entrada.readUTF();
             
             if (Usuario == null || Usuario.trim().isEmpty()) {
+                EnviarRespuestaLogin("LOGIN_INVALIDO");
                 Cerrar();
                 return;
             }
             
-            Servidor.RegistrarCliente(this);
+            boolean registro = Servidor.RegistrarCliente(this);
+            
+            if (!registro) {
+                EnviarRespuestaLogin("LOGIN_DUPLICADO");
+                Cerrar();
+                return;
+            }
+            
+            EnviarRespuestaLogin("LOGIN_OK");
             
             while (Activo) {
                 Object objeto = Entrada.readObject();
@@ -66,6 +75,17 @@ public class ConexionCliente implements Runnable {
         } finally {
             Servidor.RemoverCliente(this);
             Cerrar();
+        }
+    }
+    
+    private synchronized void EnviarRespuestaLogin(String respuesta) {
+        try {
+            if (Salida != null) {
+                Salida.writeUTF(respuesta);
+                Salida.flush();
+            }
+        } catch (IOException e) {
+            System.out.println("Error enviando respuesta de login: " + e.getMessage());
         }
     }
     

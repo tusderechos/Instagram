@@ -58,4 +58,33 @@ public final class FileUtils {
         
         return nombrearchivo.substring(punto);
     }
+    
+    public static String CopiarFotoPerfil(String rutaorigen, String usuario) {
+        if (rutaorigen == null || rutaorigen.isBlank() || usuario == null || usuario.isBlank()) {
+            return "";
+        }
+        
+        try {
+            File origen = new File(rutaorigen);
+            
+            if (!origen.exists() || !origen.isFile()) {
+                return "";
+            }
+            
+            String extension = ObtenerExtension(origen.getName());
+            String nombrearchivo = "perfil_" + System.currentTimeMillis() + extension;
+            String rutadestino = "INSTA_RAIZ" + usuario + "/imagenes/" + nombrearchivo;
+            
+            File destino = new File(rutadestino);
+            destino.getParentFile().mkdirs();
+            
+            Files.copy(origen.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            
+            return destino.getPath();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

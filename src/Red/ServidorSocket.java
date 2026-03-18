@@ -49,20 +49,19 @@ public class ServidorSocket {
         }
     }
     
-    public synchronized void RegistrarCliente(ConexionCliente nuevocliente) {
+    public synchronized boolean RegistrarCliente(ConexionCliente nuevocliente) {
         if (nuevocliente == null || nuevocliente.getUsuario() == null) {
-            return;
+            return false;
         }
         
         ConexionCliente existente = BuscarCliente(nuevocliente.getUsuario());
         
-        if (existente != null) {
-            Clientes.remove(existente);
-            existente.Cerrar();
+        if (existente != null && existente.isActivo()) {
+            return false;
         }
         
         Clientes.add(nuevocliente);
-        System.out.println("Cliente conectado: " + nuevocliente.getUsuario());
+        return true;
     }
     
     public synchronized void RemoverCliente(ConexionCliente cliente) {
@@ -119,6 +118,11 @@ public class ServidorSocket {
         } catch (IOException e) {
             System.out.println("Error cerrando servidor: " + e.getMessage());
         }
+    }
+    
+    public synchronized boolean UsuarioYaConectado(String usuario) {
+        ConexionCliente existente = BuscarCliente(usuario);
+        return existente != null && existente.isActivo();
     }
     
     public boolean isCorriendo() {

@@ -18,6 +18,8 @@ import UI.Styles.InstaColores;
 import UI.Styles.UIConstantes;
 import UI.Utils.PlaceHolder;
 import interfaces.PostCardListener;
+import modelo.Usuario;
+import service.UsuarioService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +34,8 @@ public class PostCard extends PanelRedondeado {
     private final LikeService likeService;
     private final ComentarioService comentarioService;
     
+    private final UsuarioService usuarioService;
+    
     private JButton BtnLike;
     private JButton BtnComentar;
     private JLabel LblLikes;
@@ -43,6 +47,7 @@ public class PostCard extends PanelRedondeado {
         this.publicacion = publicacion;
         this.Listener = Listener;
         this.UsuarioActual = UsuarioActual;
+        usuarioService = new UsuarioService();
         
         likeService = new LikeService();
         comentarioService = new ComentarioService();
@@ -70,9 +75,22 @@ public class PostCard extends PanelRedondeado {
         
         String inicial = publicacion.getAutor() != null && !publicacion.getAutor().isBlank() ? publicacion.getAutor().substring(0, 1).toUpperCase() : "U";
         
-        Image imagen = PlaceHolder.CrearPlaceHolderCircular(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO, inicial);
+        Image imagenperfil = null;
+        Usuario autor = usuarioService.BuscarUsuario(publicacion.getAutor());
         
-        LabelImagenCircular foto = new LabelImagenCircular(imagen);
+        if (autor != null && autor.getFotoPerfil() != null && !autor.getFotoPerfil().isBlank()) {
+            ImageIcon icono = new ImageIcon(autor.getFotoPerfil());
+            
+            if (icono.getIconWidth() > 0) {
+                imagenperfil = icono.getImage();
+            }
+        }
+        
+        if (imagenperfil == null) {
+            imagenperfil = PlaceHolder.CrearPlaceHolderCircular(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO, inicial);
+        }
+        
+        LabelImagenCircular foto = new LabelImagenCircular(imagenperfil);
         foto.setPreferredSize(new Dimension(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO));
         foto.setMinimumSize(new Dimension(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO));
         foto.setMaximumSize(new Dimension(UIConstantes.AVATAR_PEQUENO, UIConstantes.AVATAR_PEQUENO));

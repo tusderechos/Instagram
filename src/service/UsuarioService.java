@@ -141,6 +141,37 @@ public class UsuarioService {
         return Paths.UsuarioTieneEstructuraBasica(usuario);
     }
     
+    public boolean ActualizarPerfil(String usuarioactual, String nuevonombre, String nuevacontrasena, int nuevaedad, TipoCuenta nuevotipocuenta, String nuevafotoperfil) {
+        if (usuarioactual == null || usuarioactual.isBlank()) {
+            return false;
+        }
+        
+        Usuario usuario = usersRAF.Buscar(usuarioactual);
+        
+        if (usuario == null) {
+            return false;
+        }
+        
+        if (Validaciones.TextoVacio(nuevonombre) || Validaciones.TextoVacio(nuevacontrasena)) {
+            return false;
+        }
+        
+        if (!Validaciones.EdadValida(nuevaedad)) {
+            return false;
+        }
+        
+        usuario.setNombreCompleto(nuevonombre.trim());
+        usuario.setContrasena(nuevacontrasena);
+        usuario.setEdad(nuevaedad);
+        usuario.setTipoCuenta(nuevotipocuenta);
+        
+        if (nuevafotoperfil != null) {
+            usuario.setFotoPerfil(nuevafotoperfil);
+        }
+        
+        return usersRAF.Actualizar(usuario);
+    }
+    
     public UsersRAF getUsersRAF() {
         return usersRAF;
     }

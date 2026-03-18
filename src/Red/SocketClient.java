@@ -28,12 +28,14 @@ public class SocketClient {
     
     private boolean Conectado;
     private MensajeChatListener Listener;
+    private String UltimoEstadoConexion;
     
     public SocketClient(String Host, int Puerto, String Usuario) {
         this.Host = Host;
         this.Puerto = Puerto;
         this.Usuario = Usuario;
         Conectado = false;
+        UltimoEstadoConexion = "";
     }
     
     public boolean Conectar() {
@@ -48,15 +50,25 @@ public class SocketClient {
             Salida.writeUTF(Usuario);
             Salida.flush();
             
+            String respuesta = Entrada.readUTF();
+            
+            if (!respuesta.equals("LOGIN_OK")) {
+                Conectado = false;
+                DesconectarInterno();
+                NotificarEstado(false);
+                return false;
+            }
+            
+            UltimoEstadoConexion = "LOGIN_OK";
             Conectado = true;
             NotificarEstado(true);
             
             IniciarEscucha();
-            
             return true;
             
         } catch (IOException e) {
             Conectado = false;
+            UltimoEstadoConexion = "ERROR_CONEXION";
             NotificarEstado(false);
             System.out.println("No se pudo conectar al servidor: " + e.getMessage());
             return false;
@@ -116,7 +128,11 @@ public class SocketClient {
     
     public void Desconectar() {
         Conectado = false;
-        
+        DesconectarInterno();
+        NotificarEstado(false);
+    }
+    
+    public void DesconectarInterno() {
         try {
             if (Entrada != null) {
                 Entrada.close();
@@ -158,5 +174,9 @@ public class SocketClient {
     
     public String getUsuario() {
         return Usuario;
+    }
+
+    public String getUltimoEstadoConexion() {
+        return UltimoEstadoConexion;
     }
 }

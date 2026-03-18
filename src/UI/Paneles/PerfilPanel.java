@@ -23,6 +23,7 @@ import UI.Componentes.MessageBar;
 import UI.Componentes.ConfirmDialog;
 import UI.Componentes.PanelRedondeado;
 import UI.Componentes.BotonRedondeado;
+import UI.Componentes.EditarPerfilDialog;
 import UI.Core.SessionManager;
 import interfaces.AppNavigator;
 import UI.Styles.InstaColores;
@@ -287,10 +288,7 @@ public class PerfilPanel extends JPanel {
         EstadoPerfil estado = perfilService.ObtenerEstadoPerfil(viewer, UsuarioPerfilAbierto);
         
         switch (estado) {
-            case EDITAR_PERFIL -> { 
-                messageBar.MostrarInfo("Editor de perfil aun no disponible");
-                ProgramarOcultarBarra();
-            }
+            case EDITAR_PERFIL -> AbrirEditorPerfil(viewer);
             case SEGUIR -> ManejarSeguir(viewer, UsuarioPerfilAbierto);
             case SOLICITUD_ENVIADA -> { 
                 messageBar.MostrarInfo("Ya enviaste una solicitud a este usuario");
@@ -402,6 +400,25 @@ public class PerfilPanel extends JPanel {
         } else {
             messageBar.MostrarError("No se pudo desactivar la cuenta");
             ProgramarOcultarBarra();
+        }
+    }
+    
+    private void AbrirEditorPerfil(String usuario) {
+        Usuario usuarioeditor = usuarioService.BuscarUsuario(usuario);
+        
+        if (usuarioeditor == null) {
+            messageBar.MostrarError("No se pudo cargar tu perfil");
+            ProgramarOcultarBarra();
+            return;
+        }
+        
+        EditarPerfilDialog dialogo = new EditarPerfilDialog((Frame) SwingUtilities.getWindowAncestor(this), usuarioeditor);
+        dialogo.setVisible(true);
+        
+        if (dialogo.isGuardado()) {
+            messageBar.MostrarSuccess("Perfil actualizado correctamente");
+            ProgramarOcultarBarra();
+            CargarPerfil(usuario);
         }
     }
     

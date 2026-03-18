@@ -2,149 +2,154 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package UI.Paneles;
+package UI.Componentes;
 
 /**
  *
  * @author USUARIO
  */
 
-import enums.TipoCuenta;
-import service.UsuarioService;
-import UI.Componentes.BotonRedondeado;
-import UI.Componentes.PanelRedondeado;
-import interfaces.NavigationListener;
 import UI.Styles.InstaColores;
 import UI.Styles.UIConstantes;
+import UI.Utils.FileUtils;
+import enums.TipoCuenta;
+import enums.TipoMedia;
+import modelo.Usuario;
+import service.UsuarioService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 
-public class RegistroPanel extends JPanel {
+public class EditarPerfilDialog extends JDialog {
     
     private final UsuarioService usuarioService;
-    private final NavigationListener navigationListener;
+    private final Usuario UsuarioOriginal;
     
     private JTextField TxtNombre;
-    private JComboBox<String> CBGenero;
-    private JTextField TxtUsuario;
-    private JPasswordField TxtPassword;
+    private JPasswordField TxtContrasena;
     private JSpinner SPEdad;
     private JComboBox<String> CBTipoCuenta;
     private JTextField TxtFotoPerfil;
     private JLabel LblEstado;
     
-    public RegistroPanel(NavigationListener navigationListener) {
+    private String RutaFotoSeleccionada;
+    private boolean Guardado;
+    
+    public EditarPerfilDialog(Frame padre, Usuario usuario) {
+        super(padre, "Editar perfil", true);
+        UsuarioOriginal = usuario;
         usuarioService = new UsuarioService();
-        this.navigationListener = navigationListener;
+        RutaFotoSeleccionada = usuario != null ? usuario.getFotoPerfil() : "";
+        Guardado = false;
         
-        setLayout(new GridBagLayout());
-        setBackground(InstaColores.FONDO);
-        
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(18, 18, 18, 18);
+        setSize(720, 680);
+        setLocationRelativeTo(padre);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(InstaColores.FONDO);
         
         PanelRedondeado card = new PanelRedondeado(UIConstantes.ARCO_CARD);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setPreferredSize(new Dimension(590, 690));
         card.setBackground(InstaColores.CARD);
-        card.setBorder(new EmptyBorder(28, 34, 26, 34));
+        card.setBorder(new EmptyBorder(24, 28, 24, 28));
         
-        JLabel lbltitulo = new JLabel("Crear Cuenta");
-        lbltitulo.setFont(UIConstantes.LOGO_FONT);
+        JLabel lbltitulo = new JLabel("Editar perfil");
+        lbltitulo.setFont(UIConstantes.TITULO_FONT);
         lbltitulo.setForeground(InstaColores.TEXTO_PRIMARIO);
         lbltitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        JLabel lblsubtitulo = new JLabel("Completa tus datos para registrarte");
+        JLabel lblsubtitulo = new JLabel("Actualiza la informacion de tu cuenta");
         lblsubtitulo.setFont(UIConstantes.TEXTO_FONT);
         lblsubtitulo.setForeground(InstaColores.TEXTO_SECUNDARIO);
         lblsubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         TxtNombre = CrearCampoTexto();
-        CBGenero = CrearComboBox(new String[]{"M", "F"});
-        TxtUsuario = CrearCampoTexto();
-        TxtPassword = CrearCampoContrasena();
+        TxtContrasena = CrearCampoContrasena();
         SPEdad = CrearSpinnerEdad();
         CBTipoCuenta = CrearComboBox(new String[]{"PUBLICA", "PRIVADA"});
         TxtFotoPerfil = CrearCampoTexto();
+        TxtFotoPerfil.setEditable(false);
+        
+        if (UsuarioOriginal != null) {
+            TxtNombre.setText(UsuarioOriginal.getNombreCompleto());
+            TxtContrasena.setText(UsuarioOriginal.getContrasena());
+            SPEdad.setValue(UsuarioOriginal.getEdad());
+            CBTipoCuenta.setSelectedItem(UsuarioOriginal.getTipoCuenta().name());
+            TxtFotoPerfil.setText(UsuarioOriginal.getFotoPerfil());
+        }
         
         JPanel formulario = new JPanel(new GridBagLayout());
         formulario.setOpaque(false);
-        formulario.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.insets = new Insets(0, 0, 12, 0);
-        gbc2.fill = GridBagConstraints.HORIZONTAL;
-        gbc2.weightx = 1.0;
-        gbc2.gridx = 0;
-        gbc2.gridy = 0;
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 0, 12, 0);
         
-        formulario.add(CrearLabeledField("Nombre completo", TxtNombre), gbc2);
-        gbc2.gridy++;
+        formulario.add(CrearLabeledField("Nombre completo", TxtNombre), gbc);
         
-        JPanel filageneroedad = new JPanel(new GridLayout(1, 2, 12, 0));
-        filageneroedad.setOpaque(false);
-        filageneroedad.add(CrearLabeledField("Genero", CBGenero));
-        filageneroedad.add(CrearLabeledField("Edad", SPEdad));
+        gbc.gridy++;
+        formulario.add(CrearLabeledField("Contraseña", TxtContrasena), gbc);
         
-        formulario.add(filageneroedad, gbc2);
+        gbc.gridy++;
+        JPanel filaedadcuenta = new JPanel(new GridLayout(1, 2, 12, 0));
+        filaedadcuenta.setOpaque(false);
+        filaedadcuenta.add(CrearLabeledField("Edad", SPEdad));
+        filaedadcuenta.add(CrearLabeledField("Tipo de cuenta", CBTipoCuenta));
+        formulario.add(filaedadcuenta, gbc);
         
-        gbc2.gridy++;
-        formulario.add(CrearLabeledField("Usuario", TxtUsuario), gbc2);
+        gbc.gridy++;
+        formulario.add(CrearCampoFoto(), gbc);
         
-        gbc2.gridy++;
-        formulario.add(CrearLabeledField("Contraseña", TxtPassword), gbc2);
+        JPanel acciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        acciones.setOpaque(false);
         
-        gbc2.gridy++;
-        formulario.add(CrearLabeledField("Tipo de Cuenta", CBTipoCuenta), gbc2);
+        BotonRedondeado btnguardar = new BotonRedondeado("Guardar");
+        btnguardar.setPreferredSize(new Dimension(130, UIConstantes.ALTURA_BOTON));
+        btnguardar.addActionListener(e -> GuardarCambios());
         
-        gbc2.gridy++;
-        formulario.add(CrearCampoFoto(), gbc2);
+        JButton btncancelar = new JButton("Cancelar");
+        btncancelar.setFocusPainted(false);
+        btncancelar.setFont(UIConstantes.TEXTO_FONT);
+        btncancelar.setForeground(InstaColores.TEXTO_PRIMARIO);
+        btncancelar.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER_SUAVE), BorderFactory.createEmptyBorder(8, 14, 8, 14)));
+        btncancelar.setContentAreaFilled(true);
+        btncancelar.setBackground(InstaColores.CARD);
+        btncancelar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btncancelar.addActionListener(e -> dispose());
         
-        BotonRedondeado btncrear = new BotonRedondeado("Registrarme");
-        btncrear.setPreferredSize(new Dimension(360, UIConstantes.ALTURA_BOTON));
-        btncrear.setMaximumSize(new Dimension(360, UIConstantes.ALTURA_BOTON));
-        btncrear.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btncrear.addActionListener(e -> RegistrarUsuario());
-        
-        JButton btnvolver = new JButton("Volver a Login");
-        btnvolver.setFont(UIConstantes.PEQUENO_FONT);
-        btnvolver.setForeground(InstaColores.AZUL);
-        btnvolver.setContentAreaFilled(false);
-        btnvolver.setBorderPainted(false);
-        btnvolver.setFocusPainted(false);
-        btnvolver.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnvolver.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnvolver.addActionListener(e -> navigationListener.irALogin());
+        acciones.add(btnguardar);
+        acciones.add(btncancelar);
         
         LblEstado = new JLabel(" ");
         LblEstado.setFont(UIConstantes.PEQUENO_FONT);
         LblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
         LblEstado.setHorizontalAlignment(SwingConstants.CENTER);
-        LblEstado.setMaximumSize(new Dimension(450, 20));
         
         card.add(lbltitulo);
         card.add(Box.createVerticalStrut(6));
         card.add(lblsubtitulo);
-        card.add(Box.createVerticalStrut(18));
+        card.add(Box.createVerticalStrut(20));
         card.add(formulario);
-        card.add(Box.createVerticalStrut(8));
-        card.add(btncrear);
-        card.add(Box.createVerticalStrut(12));
+        card.add(Box.createVerticalStrut(10));
         card.add(LblEstado);
-        card.add(Box.createVerticalStrut(14));
-        card.add(btnvolver);
+        card.add(Box.createVerticalStrut(10));
+        card.add(acciones);
         
-        add(card, gbc);
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.setOpaque(false);
+        
+        wrapper.add(card);
+        
+        add(wrapper, BorderLayout.CENTER);
     }
     
     private JTextField CrearCampoTexto() {
         JTextField field = new JTextField();
-        field.setPreferredSize(new Dimension(0, UIConstantes.ALTURA_BOTON));
+        field.setPreferredSize(new Dimension(420, UIConstantes.ALTURA_BOTON));
         field.setFont(UIConstantes.TEXTO_FONT);
         field.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
         field.setBackground(InstaColores.INPUT_BG);
@@ -154,7 +159,7 @@ public class RegistroPanel extends JPanel {
     
     private JPasswordField CrearCampoContrasena() {
         JPasswordField field = new JPasswordField();
-        field.setPreferredSize(new Dimension(0, UIConstantes.ALTURA_BOTON));
+        field.setPreferredSize(new Dimension(420, UIConstantes.ALTURA_BOTON));
         field.setFont(UIConstantes.TEXTO_FONT);
         field.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
         field.setBackground(InstaColores.INPUT_BG);
@@ -165,7 +170,7 @@ public class RegistroPanel extends JPanel {
     private JComboBox<String> CrearComboBox(String[] opciones) {
         JComboBox<String> combo = new JComboBox<>(opciones);
         combo.setFont(UIConstantes.TEXTO_FONT);
-        combo.setPreferredSize(new Dimension(0, UIConstantes.ALTURA_BOTON));
+        combo.setPreferredSize(new Dimension(200, UIConstantes.ALTURA_BOTON));
         combo.setBackground(InstaColores.INPUT_BG);
         
         return combo;
@@ -173,7 +178,7 @@ public class RegistroPanel extends JPanel {
     
     private JSpinner CrearSpinnerEdad() {
         JSpinner spinner = new JSpinner(new SpinnerNumberModel(18, 1, 120, 1));
-        spinner.setPreferredSize(new Dimension(0, UIConstantes.ALTURA_BOTON));
+        spinner.setPreferredSize(new Dimension(200, UIConstantes.ALTURA_BOTON));
         spinner.setFont(UIConstantes.TEXTO_FONT);
         
         JComponent editor = spinner.getEditor();
@@ -210,16 +215,14 @@ public class RegistroPanel extends JPanel {
         contenedor.setOpaque(false);
         contenedor.setLayout(new BoxLayout(contenedor, BoxLayout.Y_AXIS));
         
-        JLabel lbl = new JLabel("Foto de Perfil (opcional)");
+        JLabel lbl = new JLabel("Foto de Perfil");
         lbl.setFont(new Font("SansSerif", Font.BOLD, 13));
         lbl.setForeground(InstaColores.TEXTO_PRIMARIO);
         lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JPanel filafoto = new JPanel(new BorderLayout(10, 0));
         filafoto.setOpaque(false);
-        
-        TxtFotoPerfil.setPreferredSize(new Dimension(0, UIConstantes.ALTURA_BOTON));
-        
+                
         BotonRedondeado btnexaminar = new BotonRedondeado("Examinar");
         btnexaminar.setPreferredSize(new Dimension(130, UIConstantes.ALTURA_BOTON));
         btnexaminar.addActionListener(e -> SeleccionarFoto());
@@ -240,41 +243,55 @@ public class RegistroPanel extends JPanel {
         
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
-            TxtFotoPerfil.setText(file.getAbsolutePath());
+            RutaFotoSeleccionada = file.getAbsolutePath();
+            TxtFotoPerfil.setText(RutaFotoSeleccionada);
         }
     }
     
-    private void RegistrarUsuario() {
-        String nombre = TxtNombre.getText().trim();
-        String genero = (String) CBGenero.getSelectedItem();
-        String usuario = TxtUsuario.getText().trim();
-        String contrasena = new String(TxtPassword.getPassword());
-        int edad = (Integer) SPEdad.getValue();
-        String tipotexto = (String) CBTipoCuenta.getSelectedItem();
-        String foto = TxtFotoPerfil.getText().trim();
-        
-        TipoCuenta tipocuenta = TipoCuenta.valueOf(tipotexto);
-        
-        boolean creado = usuarioService.RegistrarUsuario(nombre, genero, usuario, contrasena, edad, tipocuenta, foto);
-        
-        if (!creado) {
-            LblEstado.setForeground(InstaColores.ERROR);
-            LblEstado.setText("No se pudo registrar. Revisa tus datos");
+    private void GuardarCambios() {
+        if (UsuarioOriginal == null) {
+            MostrarError("No se pudo cargar el usuario");
             return;
         }
         
-        LblEstado.setForeground(InstaColores.SUCCESS);
-        LblEstado.setText("Cuenta creada con exito. Ahora inicia sesion");
-        LimpiarCampos();
+        String nombre = TxtNombre.getText().trim();
+        String contrasena = new String(TxtContrasena.getPassword()).trim();
+        int edad = (Integer) SPEdad.getValue();
+        String tipotexto = (String) CBTipoCuenta.getSelectedItem();
+        TipoCuenta tipocuenta = TipoCuenta.valueOf(tipotexto);
+        
+        String fotofinal = UsuarioOriginal.getFotoPerfil();
+        
+        if (RutaFotoSeleccionada != null && !RutaFotoSeleccionada.isBlank() && !RutaFotoSeleccionada.equals(UsuarioOriginal.getFotoPerfil())) {
+            String rutacopiada = FileUtils.CopiarFotoPerfil(RutaFotoSeleccionada, UsuarioOriginal.getUsuario());
+            
+            if (rutacopiada.isBlank()) {
+                MostrarError("No se pudo copiar la foto de perfil");
+                return;
+            }
+            
+            fotofinal = rutacopiada;
+        }
+        
+        boolean actualizado = usuarioService.ActualizarPerfil(UsuarioOriginal.getUsuario(), nombre, contrasena, edad, tipocuenta, fotofinal);
+        
+        if (!actualizado) {
+            MostrarError("No se pudo actualizar el perfil");
+            return;
+        }
+        
+        Guardado = true;
+        dispose();
     }
     
-    private void LimpiarCampos() {
-        TxtNombre.setText("");
-        CBGenero.setSelectedIndex(0);
-        TxtUsuario.setText("");
-        TxtPassword.setText("");
-        SPEdad.setValue(18);
-        CBTipoCuenta.setSelectedIndex(0);
-        TxtFotoPerfil.setText("");
+    private void MostrarError(String mensaje) {
+        LblEstado.setForeground(InstaColores.ERROR);
+        LblEstado.setText(mensaje);
+    }
+    
+    public boolean isGuardado() {
+        return Guardado;
     }
 }
+
+

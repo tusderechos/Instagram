@@ -25,13 +25,17 @@ public class ManejoConexionChat {
     private SocketClient socketClient;
     private MensajeChatListener Listener;
     
+    private String UltimoErrorConexion;
+    
     public ManejoConexionChat(String UsuarioActual) {
         this.UsuarioActual = UsuarioActual;
         inboxService = new InboxService();
+        UltimoErrorConexion = "";
     }
     
     public boolean Conectar(String host, int puerto) {
         if (UsuarioActual == null || UsuarioActual.trim().isEmpty()) {
+            UltimoErrorConexion = "LOGIN_INVALIDO";
             return false;
         }
         
@@ -53,7 +57,10 @@ public class ManejoConexionChat {
             }
         });
         
-        return socketClient.Conectar();
+        boolean conectado = socketClient.Conectar();
+        UltimoErrorConexion = socketClient.getUltimoEstadoConexion();
+        
+        return conectado;
     }
     
     public void Desconectar() {
@@ -79,8 +86,6 @@ public class ManejoConexionChat {
     }
     
     public boolean EnviarSticker(String receptor, String rutasticker) {
-        System.out.println("ruta sticker enviada: " + rutasticker);
-        System.out.println("longitud ruta sticker: " + rutasticker.length());
         boolean guardado = inboxService.EnviarSticker(UsuarioActual, receptor, rutasticker);
         
         if (!guardado) {
@@ -142,5 +147,9 @@ public class ManejoConexionChat {
     
     public String getUsuarioActual() {
         return UsuarioActual;
+    }
+    
+    public String getUltimoErrorConexion() {
+        return UltimoErrorConexion;
     }
 }

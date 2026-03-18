@@ -171,20 +171,24 @@ public class LoginPanel extends JPanel {
         ManejoConexionChat manejochat = new ManejoConexionChat(usuario);
         boolean conectadochat = manejochat.Conectar(HOST_CHAT, PUERTO_CHAT);
         
-        sessionManager.setUsuarioActual(usuario);
-        
-        if (conectadochat) {
-            sessionManager.setManejoConexionChat(manejochat);
-        } else {
+        if (!conectadochat) {
+            String estado = manejochat.getUltimoErrorConexion();
+            
+            if (estado.contains("LOGIN_DUPLICADO")) {
+                MostrarError("Esta cuenta ya esta abierta en otra sesion");
+            } else {
+                MostrarError("No se pudo iniciar la sesion de chat");
+            }
+            
             sessionManager.setManejoConexionChat(null);
+            return;
         }
+        
+        sessionManager.setUsuarioActual(usuario);
+        sessionManager.setManejoConexionChat(manejochat);
         
         LimpiarCampos();
         LimpiarEstado();
-        
-        if (!conectadochat) {
-            MostrarAviso("Sesion iniciada. Chat no disponible");
-        }
         
         navigationListener.irAApp();
     }   

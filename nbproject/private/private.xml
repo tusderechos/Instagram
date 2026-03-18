@@ -4,49 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/RegistroPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/AppPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/PerfilHeader.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/interfaces/PerfilHeaderListener.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/PerfilPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Red/ConexionCliente.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Red/ServidorSocket.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Red/SocketClient.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/interfaces/MensajeChatListener.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Red/ManejoConexionChat.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Red/PaqueteMensaje.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/service/StickerService.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Core/SessionManager.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/LoginPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Frame/MainFrame.java</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/SidebarMenu.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/InboxPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/service/PerfilService.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/service/SolicitudService.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Data/raf/FollowersRAF.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Data/raf/FollowingRAF.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Data/raf/RequestsRAF.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/service/FollowService.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/App/Main.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/interfaces/AppNavigator.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/SolicitudItemPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/SolicitudesPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/MensajeBurbuja.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/BuscarPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/StickerPickerPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Data/Paths/Paths.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/service/InboxService.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Red/ServidorChatLauncher.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/modelo/Mensaje.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/ConversacionesInboxRenderer.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/modelo/Like.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Data/raf/LikeRAF.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/service/LikeService.java</file>
             <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/PostCard.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/FeedPanel.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/modelo/Comentario.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/Data/raf/ComentarioRAF.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/service/ComentarioService.java</file>
-            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Dialogos/ComentariosDialog.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/CrearPostPanel.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Paneles/SolicitudesPanel.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/SolicitudItemPanel.java</file>
+            <file>file:/C:/Users/USUARIO/Documents/NetBeansProjects/Instagram/src/UI/Componentes/ConversacionesInboxRenderer.java</file>
         </group>
     </open-files>
 </project-private>

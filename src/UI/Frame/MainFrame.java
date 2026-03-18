@@ -18,6 +18,7 @@ import UI.Paneles.LoginPanel;
 import UI.Paneles.RegistroPanel;
 import UI.Styles.InstaColores;
 import UI.Styles.UIConstantes;
+import service.UsuariosDemoService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +38,7 @@ public class MainFrame extends JFrame implements NavigationListener {
     
     public MainFrame() {
         Paths.InicializarSistema();
+        new UsuariosDemoService().InicializarUsuariosDemo();
         
         sessionManager = new SessionManager();
         cardLayout = new CardLayout();

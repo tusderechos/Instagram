@@ -46,53 +46,67 @@ public class CrearPostPanel extends JPanel {
         
         messageBar = new MessageBar();
         
+        JPanel wrappergeneral = new JPanel();
+        wrappergeneral.setOpaque(false);
+        wrappergeneral.setLayout(new BoxLayout(wrappergeneral, BoxLayout.Y_AXIS));
+        
+        wrappergeneral.add(messageBar);
+        
         JPanel wrapper = new JPanel(new GridBagLayout());
         wrapper.setOpaque(false);
         
-        PanelRedondeado card = new PanelRedondeado(24);
+        PanelRedondeado card = new PanelRedondeado(UIConstantes.ARCO_CARD);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setPreferredSize(new Dimension(650, 620));
-        card.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
-        card.setBackground(Color.WHITE);
+        card.setPreferredSize(new Dimension(700, 690));
+        card.setBackground(InstaColores.CARD);
+        card.setBorder(BorderFactory.createEmptyBorder(24, 26, 24, 26));
         
         JLabel lbltitulo = new JLabel("Crear publicacion");
         lbltitulo.setFont(UIConstantes.TITULO_FONT);
         lbltitulo.setForeground(InstaColores.TEXTO_PRIMARIO);
         lbltitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
         
+        JLabel lblsubtitulo = new JLabel("Comparte una foto o escribe algo para tu perfil");
+        lblsubtitulo.setFont(UIConstantes.TEXTO_FONT);
+        lblsubtitulo.setForeground(InstaColores.TEXTO_SECUNDARIO);
+        lblsubtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
         JLabel lblcaption = new JLabel("Contenido");
-        lblcaption.setFont(UIConstantes.PEQUENO_FONT);
-        lblcaption.setForeground(InstaColores.TEXTO_SECUNDARIO);
+        lblcaption.setFont(new Font("SansSerif", Font.BOLD, 13));
+        lblcaption.setForeground(InstaColores.TEXTO_PRIMARIO);
         lblcaption.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         TxtContenido = new JTextArea(6, 20);
         TxtContenido.setLineWrap(true);
         TxtContenido.setWrapStyleWord(true);
         TxtContenido.setFont(UIConstantes.TEXTO_FONT);
-        TxtContenido.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
+        TxtContenido.setBackground(InstaColores.INPUT_BG);
+        TxtContenido.setBorder(BorderFactory.createLineBorder(InstaColores.BORDER));
         
         JScrollPane scrolltexto = new JScrollPane(TxtContenido);
         scrolltexto.setAlignmentX(Component.LEFT_ALIGNMENT);
-        scrolltexto.setPreferredSize(new Dimension(580, 150));
+        scrolltexto.setPreferredSize(new Dimension(620, 150));
         scrolltexto.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+        scrolltexto.setBorder(BorderFactory.createLineBorder(InstaColores.BORDER));
         
         JLabel lblimagen = new JLabel("Imagen");
-        lblimagen.setFont(UIConstantes.PEQUENO_FONT);
-        lblimagen.setForeground(InstaColores.TEXTO_SECUNDARIO);
+        lblimagen.setFont(new Font("SansSerif", Font.BOLD, 13));
+        lblimagen.setForeground(InstaColores.TEXTO_PRIMARIO);
         lblimagen.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        JPanel panelruta = new JPanel(new BorderLayout(8, 0));
+        JPanel panelruta = new JPanel(new BorderLayout(10, 0));
         panelruta.setOpaque(false);
         panelruta.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panelruta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        panelruta.setMaximumSize(new Dimension(Integer.MAX_VALUE, UIConstantes.ALTURA_BOTON));
         
         TxtRutaImagen = new JTextField();
         TxtRutaImagen.setEditable(false);
         TxtRutaImagen.setFont(UIConstantes.TEXTO_FONT);
+        TxtRutaImagen.setBackground(InstaColores.INPUT_BG);
         TxtRutaImagen.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InstaColores.BORDER), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
         
         BotonRedondeado btnseleccionar = new BotonRedondeado("Seleccionar");
-        btnseleccionar.setPreferredSize(new Dimension(140, 40));
+        btnseleccionar.setPreferredSize(new Dimension(150, UIConstantes.ALTURA_BOTON));
         btnseleccionar.addActionListener(e -> SeleccionarImagen());
         
         panelruta.add(TxtRutaImagen, BorderLayout.CENTER);
@@ -100,12 +114,12 @@ public class CrearPostPanel extends JPanel {
         
         LblPreview = new JLabel("Preview", SwingConstants.CENTER);
         LblPreview.setOpaque(true);
-        LblPreview.setBackground(new Color(245, 245, 245));
+        LblPreview.setBackground(InstaColores.FONDO_SECUNDARIO);
         LblPreview.setForeground(InstaColores.TEXTO_SECUNDARIO);
         LblPreview.setBorder(BorderFactory.createLineBorder(InstaColores.BORDER));
         LblPreview.setAlignmentX(Component.LEFT_ALIGNMENT);
-        LblPreview.setPreferredSize(new Dimension(580, 240));
-        LblPreview.setMaximumSize(new Dimension(Integer.MAX_VALUE, 240));
+        LblPreview.setPreferredSize(new Dimension(620, 250));
+        LblPreview.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250));
         
         JPanel acciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         acciones.setOpaque(false);
@@ -113,18 +127,20 @@ public class CrearPostPanel extends JPanel {
         acciones.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         
         BotonRedondeado btnpublicar = new BotonRedondeado("Publicar");
-        btnpublicar.setPreferredSize(new Dimension(140, 42));
+        btnpublicar.setPreferredSize(new Dimension(150, UIConstantes.ALTURA_BOTON));
         btnpublicar.addActionListener(e -> Publicar());
         
         BotonRedondeado btncancelar = new BotonRedondeado("Cancelar");
-        btncancelar.setPreferredSize(new Dimension(140, 42));
+        btncancelar.setPreferredSize(new Dimension(140, UIConstantes.ALTURA_BOTON));
         btncancelar.addActionListener(e -> LimpiarFormulario());
         
         acciones.add(btncancelar);
         acciones.add(btnpublicar);
         
         card.add(lbltitulo);
-        card.add(Box.createVerticalStrut(18));
+        card.add(Box.createVerticalStrut(6));
+        card.add(lblsubtitulo);
+        card.add(Box.createVerticalStrut(20));
         card.add(lblcaption);
         card.add(Box.createVerticalStrut(6));
         card.add(scrolltexto);
@@ -134,12 +150,13 @@ public class CrearPostPanel extends JPanel {
         card.add(panelruta);
         card.add(Box.createVerticalStrut(14));
         card.add(LblPreview);
-        card.add(Box.createVerticalGlue());
         card.add(Box.createVerticalStrut(18));
         card.add(acciones);
         
         wrapper.add(card);
-        add(wrapper, BorderLayout.CENTER);
+        wrappergeneral.add(wrapper);
+        
+        add(wrappergeneral, BorderLayout.CENTER);
     }
     
     private void SeleccionarImagen() {
@@ -164,7 +181,7 @@ public class CrearPostPanel extends JPanel {
         ImageIcon icono = new ImageIcon(ruta);
         
         if (icono.getIconWidth() > 0) {
-            Image escalada = icono.getImage().getScaledInstance(580, 240, Image.SCALE_SMOOTH);
+            Image escalada = icono.getImage().getScaledInstance(620, 250, Image.SCALE_SMOOTH);
             LblPreview.setIcon(new ImageIcon(escalada));
             LblPreview.setText("");
         } else {

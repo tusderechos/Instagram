@@ -73,7 +73,7 @@ public final class FileUtils {
             
             String extension = ObtenerExtension(origen.getName());
             String nombrearchivo = "perfil_" + System.currentTimeMillis() + extension;
-            String rutadestino = "INSTA_RAIZ" + usuario + "/imagenes/" + nombrearchivo;
+            String rutadestino = "INSTA_RAIZ/" + usuario + "/imagenes/" + nombrearchivo;
             
             File destino = new File(rutadestino);
             destino.getParentFile().mkdirs();

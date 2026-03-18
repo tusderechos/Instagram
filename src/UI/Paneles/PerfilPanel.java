@@ -343,7 +343,7 @@ public class PerfilPanel extends JPanel {
     }
     
     private void ManejarDejarDeSeguir(String viewer, String owner) {
-        ConfirmDialog dialogo = new ConfirmDialog((Frame) SwingUtilities.getWindowAncestor(this), "Confirmar", "Quieres dejar de seuir a @" + owner + "?");
+        ConfirmDialog dialogo = new ConfirmDialog((Frame) SwingUtilities.getWindowAncestor(this), "Confirmar", "Quieres dejar de seguir a @" + owner + "?");
         dialogo.setVisible(true);
         
         if (dialogo.isConfirmado()) {

@@ -195,7 +195,7 @@ public class BuscarPanel extends JPanel {
         ArrayList<Usuario> usuarios = busquedaService.BuscarUsuariosPorUsername(texto);
         
         if (usuarios.isEmpty()) {
-            MostrarSinResultados("No se encontraron usuarios", "Prueba con otro nomre o revisa el texto ingresado");
+            MostrarSinResultados("No se encontraron usuarios", "Prueba con otro nombre o revisa el texto ingresado");
             return;
         }
         

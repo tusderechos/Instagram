@@ -40,17 +40,20 @@ public class FeedPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(InstaColores.FONDO);
         
-        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 24));
-        wrapper.setOpaque(false);
-        wrapper.setBorder(BorderFactory.createEmptyBorder(18, 0, 24, 0));
-        
         ContenedorPosts = new JPanel();
         ContenedorPosts.setOpaque(false);
         ContenedorPosts.setLayout(new BoxLayout(ContenedorPosts, BoxLayout.Y_AXIS));
+        ContenedorPosts.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ContenedorPosts.setBorder(BorderFactory.createEmptyBorder(18, 230, 24, 230));
         
-        wrapper.add(ContenedorPosts);
+//        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 24));
+//        wrapper.setOpaque(false);
+//        wrapper.setBorder(BorderFactory.createEmptyBorder(18, 0, 24, 0));
+//        wrapper.add(ContenedorPosts);
+//        
+//        ContenedorPosts.setPreferredSize(new Dimension(520, 1));
         
-        ScrollPane = new JScrollPane(wrapper);
+        ScrollPane = new JScrollPane(ContenedorPosts);
         ScrollPane.setBorder(null);
         ScrollPane.getViewport().setBackground(InstaColores.FONDO);
         ScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -72,7 +75,7 @@ public class FeedPanel extends JPanel {
         } else {
             for (Publicacion post : posts) {
                 PostCard card = new PostCard(post, usuario -> appNavigator.irAPerfil(usuario), sessionManager.getUsuarioActual());
-                card.setAlignmentX(Component.CENTER_ALIGNMENT);
+                card.setAlignmentX(Component.LEFT_ALIGNMENT);
                 
                 ContenedorPosts.add(card);
                 ContenedorPosts.add(Box.createVerticalStrut(18));

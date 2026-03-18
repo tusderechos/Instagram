@@ -54,8 +54,9 @@ public class PostCard extends PanelRedondeado {
         
         setLayout(new BorderLayout());
         setBackground(InstaColores.CARD);
-        setMaximumSize(new Dimension(500, 760));
-        setPreferredSize(new Dimension(470, 645));
+        setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+        setMinimumSize(new Dimension(500, 0));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         
         add(CrearHeader(), BorderLayout.NORTH);
@@ -139,6 +140,7 @@ public class PostCard extends PanelRedondeado {
         imagen.setBackground(InstaColores.FONDO_SECUNDARIO);
         imagen.setHorizontalAlignment(SwingConstants.CENTER);
         imagen.setVerticalAlignment(SwingConstants.CENTER);
+        imagen.setMaximumSize(new Dimension(Integer.MAX_VALUE, 420));
         imagen.setPreferredSize(new Dimension(470, 420));
         imagen.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InstaColores.DIVISOR));
         
@@ -207,10 +209,26 @@ public class PostCard extends PanelRedondeado {
         acciones.add(BtnComentar);
         acciones.add(LblComentarios);
         
-        JLabel lblcontenido = new JLabel("<html><div style='width:410px;'><b>" + publicacion.getAutor() + " </b> " + Escapar(publicacion.getContenido()) + "</div></html>");
-        lblcontenido.setFont(UIConstantes.TEXTO_FONT);
-        lblcontenido.setForeground(InstaColores.TEXTO_PRIMARIO);
-        lblcontenido.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        JLabel lblcontenido = new JLabel("<html><div style='width:100%;'><b>" + publicacion.getAutor() + " </b> " + Escapar(publicacion.getContenido()) + "</div></html>");
+//        lblcontenido.setFont(UIConstantes.TEXTO_FONT);
+//        lblcontenido.setForeground(InstaColores.TEXTO_PRIMARIO);
+//        lblcontenido.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        lblcontenido.setVerticalAlignment(SwingConstants.TOP);
+//        lblcontenido.setMaximumSize(new Dimension(450, Integer.MAX_VALUE));
+        
+        JTextPane lblcontenido = new JTextPane();
+        lblcontenido.setContentType("text/html");
+        lblcontenido.setText("<html><body style='font-family:SansSerif; font-size:11px;'><b>" + publicacion.getAutor() + "</b> " + Escapar(publicacion.getContenido()) + "</body></html>");
+        lblcontenido.setEditable(false);
+        lblcontenido.setFocusable(false);
+        lblcontenido.setOpaque(false);
+        lblcontenido.setBorder(null);
+        
+        JPanel panelcontenido = new JPanel(new BorderLayout());
+        panelcontenido.setOpaque(false);
+        panelcontenido.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panelcontenido.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        panelcontenido.add(lblcontenido, BorderLayout.CENTER);
         
         PanelPreviewComentarios = new JPanel();
         PanelPreviewComentarios.setOpaque(false);
@@ -224,7 +242,7 @@ public class PostCard extends PanelRedondeado {
         
         footer.add(acciones);
         footer.add(Box.createVerticalStrut(10));
-        footer.add(lblcontenido);
+        footer.add(panelcontenido);
         footer.add(Box.createVerticalStrut(10));
         footer.add(PanelPreviewComentarios);
         footer.add(Box.createVerticalStrut(6));
@@ -244,10 +262,17 @@ public class PostCard extends PanelRedondeado {
         for (int i = 0; i < limite; i++) {
             Comentario comentario = comentarios.get(i);
             
-            JLabel lblcomentario = new JLabel("<html><div style='width:410px;'><b>" + Escapar(comentario.getUsuario()) + " </b> " + Escapar(comentario.getTexto()) + "</div></html>");
+            JTextArea lblcomentario = new JTextArea(comentario.getUsuario() + " " + comentario.getTexto());
             lblcomentario.setFont(UIConstantes.PEQUENO_FONT);
             lblcomentario.setForeground(InstaColores.TEXTO_PRIMARIO);
+            lblcomentario.setOpaque(false);
+            lblcomentario.setEditable(false);
+            lblcomentario.setFocusable(false);
+            lblcomentario.setLineWrap(true);
+            lblcomentario.setWrapStyleWord(true);
+            lblcomentario.setBorder(null);
             lblcomentario.setAlignmentX(Component.LEFT_ALIGNMENT);
+            lblcomentario.setMaximumSize(new Dimension(410, Integer.MAX_VALUE));
             
             PanelPreviewComentarios.add(lblcomentario);
             PanelPreviewComentarios.add(Box.createVerticalStrut(5));

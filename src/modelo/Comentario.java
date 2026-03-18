@@ -12,8 +12,8 @@ public class Comentario {
     
     private long PostID;
     private String AutorPost;
-    private String Usuario;
-    private String Texto;
+    private static String Usuario;
+    private static String Texto;
     private String Fecha;
 
     public Comentario(long PostID, String AutorPost, String Usuario, String Texto, String Fecha) {
@@ -32,11 +32,11 @@ public class Comentario {
         return AutorPost;
     }
 
-    public String getUsuario() {
+    public static String getUsuario() {
         return Usuario;
     }
 
-    public String getTexto() {
+    public static String getTexto() {
         return Texto;
     }
 

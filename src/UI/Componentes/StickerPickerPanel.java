@@ -10,6 +10,7 @@ package UI.Componentes;
  */
 
 import UI.Styles.InstaColores;
+import UI.Styles.ScrollBarUI;
 import UI.Styles.UIConstantes;
 import service.StickerService;
 
@@ -43,7 +44,7 @@ public class StickerPickerPanel extends JPanel {
         panelsuperior.setBackground(InstaColores.CARD);
         panelsuperior.setBorder(new EmptyBorder(14, 14, 14, 14));
         
-        JLabel lbltitulo = new JLabel("Stickes");
+        JLabel lbltitulo = new JLabel("Stickers");
         lbltitulo.setFont(UIConstantes.SUBTITULO_FONT);
         lbltitulo.setForeground(InstaColores.TEXTO_PRIMARIO);
         
@@ -62,6 +63,8 @@ public class StickerPickerPanel extends JPanel {
         JScrollPane scroll = new JScrollPane(PanelContenido);
         scroll.setBorder(null);
         scroll.getViewport().setBackground(InstaColores.FONDO);
+        scroll.getVerticalScrollBar().setUI(new ScrollBarUI());
+        scroll.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         scroll.getVerticalScrollBar().setUnitIncrement(14);
         
         LblEstado = new JLabel(" ");

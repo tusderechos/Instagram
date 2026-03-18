@@ -16,6 +16,7 @@ import UI.Componentes.PostCard;
 import UI.Core.SessionManager;
 import interfaces.AppNavigator;
 import UI.Styles.InstaColores;
+import UI.Styles.ScrollBarUI;
 import UI.Styles.UIConstantes;
 
 import javax.swing.*;
@@ -53,6 +54,8 @@ public class FeedPanel extends JPanel {
         ScrollPane.setBorder(null);
         ScrollPane.getViewport().setBackground(InstaColores.FONDO);
         ScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        ScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI());
+        ScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         ScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         
         add(ScrollPane, BorderLayout.CENTER);

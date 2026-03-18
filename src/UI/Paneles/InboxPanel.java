@@ -22,6 +22,7 @@ import interfaces.AppNavigator;
 import interfaces.MensajeChatListener;
 import modelo.Mensaje;
 import UI.Componentes.ConversacionesInboxRenderer;
+import UI.Styles.ScrollBarUI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -110,6 +111,8 @@ public class InboxPanel extends JPanel implements MensajeChatListener {
         
         ScrollMensajes = new JScrollPane(PanelMensajes);
         ScrollMensajes.setBorder(null);
+        ScrollMensajes.getVerticalScrollBar().setUI(new ScrollBarUI());
+        ScrollMensajes.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         ScrollMensajes.getViewport().setBackground(InstaColores.FONDO);
         ScrollMensajes.getVerticalScrollBar().setUnitIncrement(14);
                 
